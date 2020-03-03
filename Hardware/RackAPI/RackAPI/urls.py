@@ -16,6 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+import RPi.GPIO as GPIO
+
+from . import views
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(23,GPIO.OUT)
+
 urlpatterns = [
+    path('<int:state>/', views.lock),
     path('admin/', admin.site.urls),
 ]
