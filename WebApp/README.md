@@ -15,10 +15,20 @@ python3 -m venv env
 ```
 2. Activate
 ```
-source env/bin/activate   # do you work inside
+source env/bin/activate    # do you work inside
 ```
-3. Deploy
+3. Build
 ```
-sudo docker-compose up    # grab Docker images and python packages, if necessary
+sudo docker-compose build  # grab Docker images and Python packages
 ```
-4. Write ~~bugs~~ features
+4. Database Setup
+```
+python3 manage.py migrate
+```
+5. Write ~~bugs~~ features
+
+## Deploy
+Start development server at http://0.0.0.0:8000
+```
+sudo docker-compose up
+```
