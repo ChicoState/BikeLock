@@ -23,6 +23,6 @@ from . import views
 lock.init()
 
 urlpatterns = [
-    path('<int:state>/', views.setLock),
+    path('<int:lockid>/<int:state>/', views.setLock),
     path('admin/', admin.site.urls),
 ]
