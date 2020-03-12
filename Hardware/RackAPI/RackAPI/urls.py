@@ -17,13 +17,12 @@ from django.contrib import admin
 from django.urls import path
 
 import RPi.GPIO as GPIO
+import lock
 
 from . import views
-
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(23,GPIO.OUT)
+lock.init()
 
 urlpatterns = [
-    path('<int:state>/', views.lock),
+    path('<int:state>/', views.setLock),
     path('admin/', admin.site.urls),
 ]

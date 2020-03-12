@@ -1,10 +1,8 @@
 from django.http import JsonResponse
-import RPi.GPIO as GPIO
+import lock
 
-ledPin = 23
-
-def lock(request, state):
-    GPIO.output(ledPin, state)
+def setLock(request, state):
+    lock.set_Lock_State(0,state)
     data = {
         'state': state,
         'stationID': 42,
