@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:developer' as developer;
 
 void main() => runApp(MyApp());
 
@@ -46,16 +50,34 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "false";
 
-  void _incrementCounter() {
+  void lock_and_unlock() {
+    var HttpString = "";
+    httpHelper() async {
+      developer.log("HELPER CALLED");
+      final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
+      developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
+
+      HttpString = json.decode(response.body).toString();
+      developer.log(HttpString);
+      return HttpString;
+    }
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-//      _counter++;
-    if(_counter == "false"){
-      _counter = "true";
+
+
+
+      if(_counter == "false"){
+        //TODO handle async issue so that I can print portion of json
+        _counter = "true";
+        httpHelper();
+        developer.log("false");
+      developer.log(HttpString);
+
+      _counter = HttpString;
     }
     else{
       _counter = "false";
@@ -109,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: lock_and_unlock,
         tooltip: 'Increment',
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
