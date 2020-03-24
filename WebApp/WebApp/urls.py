@@ -24,4 +24,5 @@ api.register (r'stations', views.StationViewSet)
 urlpatterns = [
     path('api/', include (api.urls)),
     path('admin/', admin.site.urls),
+    path('api/lock/', views.LockStationView)
 ]

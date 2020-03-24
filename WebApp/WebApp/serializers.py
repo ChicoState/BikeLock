@@ -5,5 +5,5 @@ from WebApp.models import Station
 class StationSerializer (serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Station
-        fields = ['ip']
+        fields = ['uuid', 'ip']
 
