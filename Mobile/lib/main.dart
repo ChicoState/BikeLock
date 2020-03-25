@@ -15,12 +15,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Center(
             child: new Center(
-              child: MyHomePage(title: 'Super Bike Lock'),
-
-            )
-        ),
+          child: MyHomePage(title: 'Super Bike Lock'),
+        )),
       ),
-
     );
   }
 }
@@ -31,7 +28,6 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -41,12 +37,9 @@ class _MyHomePageState extends State<MyHomePage> {
   var _currentStation = 'Station 1';
 
   var _AvailableLocks = ['Lock 1', 'Lock 2'];
-  var _currentLock= 'Lock 1';
-
-
+  var _currentLock = 'Lock 1';
 
   void lock_and_unlock() {
-
     //TODO Create drop down menu with list of the locks, hardcode for now
     //Variables for interacting with the locks, set them as you need to
     String UUID = "UUID Placeholder";
@@ -66,14 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
     HTTP.get(true);
 
     setState(() {
-      if(_counter == "false"){
+      if (_counter == "false") {
         //TODO handle async issue so that I can print portion of json
         _counter = "true";
-      }
-      else{
+      } else {
         _counter = "false";
       }
-
     });
   }
 
@@ -87,22 +78,30 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
 
-          title: Text(widget.title), centerTitle: true
-      ),
+          title: Text(widget.title),
+          centerTitle: true),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-
           children: <Widget>[
-            Text('Your Bike is Locked up:',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),  ),
-            Text('$_counter',  style: TextStyle( fontSize: 20, )),
+            Text(
+              'Your Bike is Locked up:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Text('$_counter',
+                style: TextStyle(
+                  fontSize: 20,
+                )),
             SizedBox(height: 50),
-            Text('Station ID:',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+            Text(
+              'Station ID:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
             DropdownButton<String>(
               items: _AvailableStations.map((String dropDownStringItem) {
                 return DropdownMenuItem<String>(
@@ -110,46 +109,45 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text(dropDownStringItem),
                 );
               }).toList(),
-
               onChanged: (String newValueSelected) {
                 // Your code to execute, when a menu item is selected from drop down
                 _onStationItemSelected(newValueSelected);
               },
-
               value: _currentStation,
             ),
             SizedBox(height: 50),
-            Text('Lock ID:',  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+            Text(
+              'Lock ID:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
             DropdownButton<String>(
               items: _AvailableLocks.map((String dropDownStringItem) {
                 return DropdownMenuItem<String>(
                   value: dropDownStringItem,
-                  child: Text(dropDownStringItem, ),
+                  child: Text(
+                    dropDownStringItem,
+                  ),
                 );
               }).toList(),
-
               onChanged: (String newValueSelected) {
                 // Your code to execute, when a menu item is selected from drop down
                 _onLockItemSelected(newValueSelected);
               },
-
               value: _currentLock,
-
             ),
           ],
         ),
-
       ),
       floatingActionButton: Container(
         height: 100.0,
         width: 100.0,
-
         child: FittedBox(
           child: FloatingActionButton(
             onPressed: lock_and_unlock,
             tooltip: 'Increment',
             //Alternating Icon
-            child: (_counter == "true") ? Icon(Icons.lock) : Icon(Icons.lock_open),
+            child:
+                (_counter == "true") ? Icon(Icons.lock) : Icon(Icons.lock_open),
             //Alternating Icon Color
             backgroundColor: (_counter == "true") ? Colors.red : Colors.green,
             splashColor: Colors.amber,
@@ -172,5 +170,3 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 }
-
-

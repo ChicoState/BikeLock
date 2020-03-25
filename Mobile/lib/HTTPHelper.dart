@@ -2,7 +2,6 @@ import 'package:http/http.dart' as http;
 import 'dart:developer' as developer;
 import 'dart:convert';
 
-
 //This is the API String I found on the github to interface with the server
 final String STATION_API_CALL = "/api/stations/";
 
@@ -11,8 +10,8 @@ final String DOMAIN = "http://rackServer:8000";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
+  String domain;
 
-  String domain ;
   String UUID;
   int lock_ID;
   int state;
@@ -32,9 +31,8 @@ class HTTPHelper {
     this.state = state;
   }
 
-
   //Post request using JSON
-  post(){
+  post() {
     var frame = json.encode({
       'uuid': this.UUID,
       'lock_id': this.lock_ID,
@@ -54,7 +52,7 @@ class HTTPHelper {
   get(bool test) async {
     developer.log("GET CALLED");
 
-    if(test == true){
+    if (test == true) {
       String HttpString = DOMAIN + STATION_API_CALL;
       developer.log("GET STRING: " + HttpString);
 
@@ -66,9 +64,11 @@ class HTTPHelper {
     }
 
     //EXAMPLE OF WORKING GET RESPONSE
-    else{
-      final sampleresponse = await http.get('https://jsonplaceholder.typicode.com/albums/1');
-      developer.log("HTTP STATUS CODE: " + sampleresponse.statusCode.toString());
+    else {
+      final sampleresponse =
+          await http.get('https://jsonplaceholder.typicode.com/albums/1');
+      developer
+          .log("HTTP STATUS CODE: " + sampleresponse.statusCode.toString());
 
       String sampleString = json.decode(sampleresponse.body).toString();
       developer.log(sampleString);
