@@ -37,13 +37,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "false";
 
-
-  String UUID;
-  int lock_ID;
-  int state;
-
-
   void lock_and_unlock() {
+
+    //Variables for interacting with the locks, set them as you need to
+    String UUID;
+    int lock_ID;
+    int state;
 
     //Creating HTTP Object
     var HTTP = HTTPHelper(UUID, lock_ID, state);
