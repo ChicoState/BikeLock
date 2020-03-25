@@ -93,6 +93,6 @@ def LockStationView (request):
         r = requests.get (url, json=payload)
 
         if r.status_code == 200:
-            return HttpResponse(r.text)
+            return HttpResponse (r.text)
         else:
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
