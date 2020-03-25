@@ -9,18 +9,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Super Bike Lock',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Super Bike Lock'),
+//      home: MyHomePage(title: 'Super Bike Lock'),
+      home: Scaffold(
+        body: Center(
+            child: new Center(
+              child: MyHomePage(title: 'Super Bike Lock'),
+
+            )
+        ),
+      ),
 
     );
   }
@@ -32,13 +31,19 @@ class MyHomePage extends StatefulWidget {
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "false";
 
+  String nameCity = "";
+  var _AvailableLocks = ['Lock 1', 'Lock 2'];
+  var _currentItemSelected = 'Lock 1';
+
   void lock_and_unlock() {
 
+    //TODO Create drop down menu with list of the locks, hardcode for now
     //Variables for interacting with the locks, set them as you need to
     String UUID;
     int lock_ID;
@@ -60,10 +65,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if(_counter == "false"){
         //TODO handle async issue so that I can print portion of json
         _counter = "true";
-    }
-    else{
-      _counter = "false";
-    }
+      }
+      else{
+        _counter = "false";
+      }
 
     });
   }
@@ -81,44 +86,51 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
 
-        title: Text(widget.title), centerTitle: true
+          title: Text(widget.title), centerTitle: true
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Your Bike is Locked up:',
-            ),
-            Text(
-              '$_counter',
-//              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
+          Text('Your Bike is Locked up:',),
+          Text('$_counter',),
+          DropdownButton<String>(
+          items: _AvailableLocks.map((String dropDownStringItem) {
+            return DropdownMenuItem<String>(
+              value: dropDownStringItem,
+              child: Text(dropDownStringItem),
+            );
+          }).toList(),
+
+          onChanged: (String newValueSelected) {
+            // Your code to execute, when a menu item is selected from drop down
+            _onDropDownItemSelected(newValueSelected);
+          },
+
+          value: _currentItemSelected,
+
         ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: lock_and_unlock,
-        tooltip: 'Increment',
-        //TODO Alternating lock & unlock icon
-        child: Icon(Icons.lock),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
+    ),
+    floatingActionButton: FloatingActionButton(
+    onPressed: lock_and_unlock,
+    tooltip: 'Increment',
+    //TODO Alternating lock & unlock icon
+    child: (_counter == "true") ? Icon(Icons.lock) : Icon(Icons.lock_open),
+    backgroundColor: (_counter == "true") ? Colors.red : Colors.green,
+    ),
+        // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+  void _onDropDownItemSelected(String newValueSelected) {
+    setState(() {
+      this._currentItemSelected = newValueSelected;
+    });
+  }
 }
+
+

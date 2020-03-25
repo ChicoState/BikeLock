@@ -4,10 +4,10 @@ import 'dart:convert';
 
 
 //This is the API String I found on the github to interface with the server
-final String STATION_API_CALL = '/api/station/';
+final String STATION_API_CALL = "/api/stations/";
 
 //This is used as the URL Essentially ex: http://0.0.0.0:8000
-final String DOMAIN = "www.Some_Domain.com";
+final String DOMAIN = "http://rackServer:8000";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
@@ -53,7 +53,6 @@ class HTTPHelper {
   // ---- Pass in false to test network connection and see what a working get request looks like
   get(bool test) async {
     developer.log("GET CALLED");
-
 
     if(test == true){
       String HttpString = DOMAIN + STATION_API_CALL;
