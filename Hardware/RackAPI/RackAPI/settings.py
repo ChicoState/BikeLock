@@ -30,7 +30,7 @@ SECRET_KEY = 'k_2(crh4&@l@+oq-6ncq!6gh6m0jp_tho9tlu4c%n7jzvckl-*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['rack2']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
