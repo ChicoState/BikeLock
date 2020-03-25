@@ -67,8 +67,8 @@ def LockStationView (request):
         except exceptions.ObjectDoesNotExist:
             return HttpResponse ("Invalid station UUID")
 
-        url = 'http://' + station.ip + ':8000/lock/' + lock_id
-        payload = {'state': state}
+        url = 'http://' + station.ip + ':8000/lock/'
+        payload = {'lock_id': lock_id, 'state': state}
 
         r = requests.post (url, json=payload)
 
