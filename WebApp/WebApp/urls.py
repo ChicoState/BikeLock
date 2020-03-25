@@ -18,11 +18,9 @@ from django.urls import include, path
 from rest_framework import routers
 from WebApp import views
 
-api = routers.DefaultRouter()
-api.register (r'stations', views.StationViewSet)
-
 urlpatterns = [
-    path('api/', include (api.urls)),
     path('admin/', admin.site.urls),
+
+    path('api/stations/', views.StationView),
     path('api/lock/', views.LockStationView)
 ]
