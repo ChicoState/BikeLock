@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse 
+from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
 from WebApp.models import Station
@@ -8,6 +9,11 @@ import requests
 import json
 
 def get_client_ip (request):
+    """
+    From this Stack Overflow post https://stackoverflow.com/questions/4581789/how-do-i-get-user-ip-address-in-django
+
+    Solution by user yanchenko https://stackoverflow.com/users/15187/yanchenko
+    """
     x_forwarded_for = request.META.get ('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
@@ -22,17 +28,19 @@ def StationView (request):
         station_uuid = payload['uuid']
         ip_addr = get_client_ip (request)
 
-        station = Station.objects.get (uuid = station_uuid)
+        response = ''
 
-        if station:
-            station.ip = ip_addr
-            station.save()
-
-            response = json.dumps ([{"uuid": str (station.uuid),
-                                     "ip": station.ip}])
-            return HttpResponse (response)
-        else:
+        try:
+            station = Station.objects.get (uuid = station_uuid)
+        except exceptions.ObjectDoesNotExist:
             return HttpResponse ("Invalid station UUID")
+
+        station.ip = ip_addr
+        station.save()
+
+        response = json.dumps ([{"uuid": str (station.uuid),
+                                 "ip": station.ip}])
+        return HttpResponse (response)
 
     if request.method == 'GET':
         response = []
@@ -54,7 +62,11 @@ def LockStationView (request):
 
         station = Station.objects.get (uuid = station_uuid)
 
-        r = requests.get (station.ip + ':8000/lock/' + lock_id)
-        return HttpResponse ("Locked *thumbs up*")
+        r = requests.get ('http://' + station.ip + ':8000/lock/' + lock_id)
+
+        if r.status_code == 200:
+            return HttpResponse ("Locked *thumbs up*")
+        else:
+            return HttpResponse (f"Something went wrong. Status code {r.status_code}")
     else:
         return HttpResponse ("Miss me with that GET")
