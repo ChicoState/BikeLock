@@ -56,13 +56,21 @@ def StationView (request):
 @csrf_exempt
 def LockStationView (request):
     if request.method == 'POST':
+        # Get request parameters
         payload = json.loads (request.body)
         station_uuid = payload['uuid']
         lock_id = payload['lock_id']
+        state = payload['state']
 
-        station = Station.objects.get (uuid = station_uuid)
+        try:
+            station = Station.objects.get (uuid = station_uuid)
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse ("Invalid station UUID")
 
-        r = requests.get ('http://' + station.ip + ':8000/lock/' + lock_id)
+        url = 'http://' + station.ip + ':8000/lock/' + lock_id
+        payload = {'state': state}
+
+        r = requests.post (url, json=payload)
 
         if r.status_code == 200:
             return HttpResponse ("Locked *thumbs up*")
