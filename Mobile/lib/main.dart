@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
+import 'HTTPHelper.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Super Bike Lock',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -24,23 +20,14 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Super Bike Lock'),
+
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -50,34 +37,30 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _counter = "false";
 
+
+  String UUID;
+  int lock_ID;
+  int state;
+
+
   void lock_and_unlock() {
-    var HttpString = "";
-    httpHelper() async {
-      developer.log("HELPER CALLED");
-      final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
-      developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
 
-      HttpString = json.decode(response.body).toString();
-      developer.log(HttpString);
-      return HttpString;
-    }
+    //Creating HTTP Object
+    var HTTP = HTTPHelper(UUID, lock_ID, state);
+
+    //Attempting to post, this will fail until the DOMAIN string inside of it is set to real value
+    HTTP.post();
+
+    //This is doing a get request to a working endpoint online
+    HTTP.get(false);
+
+    //This will attempt to use the variables stored inside HTTP to do an actual get request from the server
+    HTTP.get(true);
+
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-
-
-
       if(_counter == "false"){
         //TODO handle async issue so that I can print portion of json
         _counter = "true";
-        httpHelper();
-        developer.log("false");
-      developer.log(HttpString);
-
-      _counter = HttpString;
     }
     else{
       _counter = "false";
@@ -98,7 +81,8 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+
+        title: Text(widget.title), centerTitle: true
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
@@ -133,7 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: lock_and_unlock,
         tooltip: 'Increment',
-        child: Icon(Icons.add),
+        //TODO Alternating lock & unlock icon
+        child: Icon(Icons.lock),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
