@@ -11,3 +11,5 @@ def init():
 def set_Lock_State(lockid, state):
     GPIO.output(ledpins[lockid], state)
 
+def get_Lock_State(lockid):
+    return GPIO.input(ledpins[lockid])
