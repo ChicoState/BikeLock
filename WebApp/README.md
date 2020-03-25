@@ -32,3 +32,23 @@ Start development server at http://0.0.0.0:8000
 ```
 sudo docker-compose up
 ```
+
+# API
+
+## \<domain\>/api/station/
+**GET**    Get all station UUIDs and IP addresses.
+
+---
+## \<domain\>/api/lock/
+
+**POST**    Request a lock.
+
+Payload (JSON):
+```
+{
+    "uuid": <station UUID>,
+    "lock_id": <lock ID (string "0" or "1")>,
+    "state": <off or on (string "0" or "1")>
+}
+```
+---
