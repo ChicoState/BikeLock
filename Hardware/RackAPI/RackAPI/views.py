@@ -7,15 +7,15 @@ import json
 def setLock(request):
     if request.method == 'POST':
         payload = json.loads(request.body)
-        state = payload['state']
-        lockid = payload['lock_id']
+        state = int(payload['state'])
+        lockid = int(payload['lock_id'])
 
         lock.set_Lock_State(lockid,state)
         return JsonResponse(payload)
     
     if request.method == 'GET':
         payload = json.loads(request.body)
-        lockid = payload['lock_id']
+        lockid = int(payload['lock_id'])
         payload['state'] = lock.get_Lock_State(lockid)
 
         return JsonResponse(payload)
