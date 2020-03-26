@@ -44,9 +44,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String get_cur_uuid() {
     if (_currentStation == 'Station 1') {
-        return "b80e7c2a-91d1-4718-a1f3-2e2c7d260646";
-    }
-    else if (_currentStation == 'Station 2') {
+      return "b80e7c2a-91d1-4718-a1f3-2e2c7d260646";
+    } else if (_currentStation == 'Station 2') {
       return "095a6367-0fc7-4a91-995f-a7268c6e76cf";
     }
     return "UNKOWN-LOCK";
@@ -56,34 +55,33 @@ class _MyHomePageState extends State<MyHomePage> {
     developer.log(_currentLock);
     if (_currentLock == 'Lock 1') {
       return 0;
-    }
-    else if (_currentLock == 'Lock 2') {
+    } else if (_currentLock == 'Lock 2') {
       return 1;
     }
     return -1;
   }
 
-  Future<bool> get_lock_state() async{
-    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(),0);
+  Future<bool> get_lock_state() async {
+    //TODO error checking for failed attempts
+    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(), 0);
     final response = await HTTP.get(true);
     Map<String, dynamic> result = json.decode(response.body);
-    return result['state']==1;
+    return result['state'] == 1;
   }
 
   set_lock_state(bool state) async {
-    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(),state?1:0);
+    //TODO error checking for failed attempts
+    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
     final response = await HTTP.post();
   }
 
-  lock_and_unlock() async{
-    //TODO Create drop down menu with list of the locks, hardcode for now
-
+  lock_and_unlock() async {
     var state = await get_lock_state();
     set_lock_state(!state);
 
     setState(() {
+      //TODO handle async issue so that I can print portion of json
       if (!state) {
-        //TODO handle async issue so that I can print portion of json
         _counter = "true";
       } else {
         _counter = "false";
