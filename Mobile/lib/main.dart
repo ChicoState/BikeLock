@@ -52,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   int get_cur_lock() {
-    developer.log(_currentLock);
     if (_currentLock == 'Lock 1') {
       return 0;
     } else if (_currentLock == 'Lock 2') {
@@ -63,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<bool> get_lock_state() async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(), 0);
+    var HTTP = HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), 0);
     final response = await HTTP.get();
     Map<String, dynamic> result = json.decode(response.body);
     return result['state'] == 1;
@@ -71,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   set_lock_state(bool state) async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
+    var HTTP = HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
     final response = await HTTP.post();
   }
 

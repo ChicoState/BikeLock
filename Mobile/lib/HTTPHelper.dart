@@ -8,68 +8,54 @@ import 'dart:convert';
 final String STATION_API_CALL = "/api/lock/";
 
 //This is used as the URL Essentially ex: http://0.0.0.0:8000
-final String DOMAIN = "http://rackServer:8000";
+final String DOMAIN = "rackServer:8000";
+
+final String METHOD = "http://";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
-  String domain;
-
+  String api_method;
   String UUID;
   int lock_ID;
   int state;
 
   //Constructor without Domain
-  HTTPHelper(String UUID, int lock_ID, int state) {
-    this.UUID = UUID;
-    this.lock_ID = lock_ID;
-    this.state = state;
-  }
-
-  //Constructor with Domain so that it can be tested if it needs to be altered
-  HTTPHelper.withDomain(String domain, String UUID, int lock_ID, int state) {
-    this.domain = domain;
+  HTTPHelper(String method, String UUID, int lock_ID, int state) {
+    this.api_method = method;
     this.UUID = UUID;
     this.lock_ID = lock_ID;
     this.state = state;
   }
 
   //Post request using JSON
-  post() {
+  Future<http.Response> post() async {
     var frame = json.encode({
       'uuid': this.UUID,
       'lock_id': this.lock_ID,
       'state': this.state,
     });
+    developer.log("HTTP POST FRAME: " + frame);
 
-    developer.log("POST CALLED... PRINTING FRAME:");
-    developer.log(frame);
-
-    http.post(DOMAIN + STATION_API_CALL, body: frame);
+    final http.Response response = await http.post(METHOD + DOMAIN + this.api_method, body: frame);
+    developer.log('HTTP POST STATUS CODE: ' + response.statusCode.toString());
+    developer.log('HTTP POST RESPONSE: ' + response.body.toString());
+    return response;
   }
 
-  //TODO Agree upon a format for responses so I know how to parse
-
   //Http Get request
-  // ---- Pass in TRUE in order to actually test get call locally, it will use the DOMAIN and STATION_API_CALL at the top
-  // ---- Pass in false to test network connection and see what a working get request looks like
   Future<http.Response> get() async {
-    developer.log("GET CALLED");
     var frame = {
       'uuid': this.UUID,
       'lock_id': this.lock_ID.toString(),
       'state': this.state.toString(),
     };
+    final uri = Uri.http(DOMAIN, this.api_method, frame);
+    developer.log("HTTP GET REQUEST: " + uri.toString());
 
-    String HttpString = DOMAIN + STATION_API_CALL;
-    developer.log("GET STRING: " + HttpString);
-
-    final uri = Uri.http('rackServer:8000', '/api/lock/', frame);
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
     final http.Response response = await http.get(uri, headers: headers);
-
-    developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
-
-    developer.log('response: ' + response.body.toString());
+    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
     return response;
   }
 }
