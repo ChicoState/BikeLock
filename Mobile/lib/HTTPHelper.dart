@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'dart:developer' as developer;
 import 'dart:convert';
 
 //This is the API String I found on the github to interface with the server
-final String STATION_API_CALL = "/api/stations/";
+final String STATION_API_CALL = "/api/lock/";
 
 //This is used as the URL Essentially ex: http://0.0.0.0:8000
 final String DOMAIN = "http://rackServer:8000";
@@ -41,7 +43,8 @@ class HTTPHelper {
 
     developer.log("POST CALLED... PRINTING FRAME:");
     developer.log(frame);
-    http.post(domain, body: frame);
+
+    http.post(DOMAIN + STATION_API_CALL, body: frame);
   }
 
   //TODO Agree upon a format for responses so I know how to parse
@@ -49,29 +52,36 @@ class HTTPHelper {
   //Http Get request
   // ---- Pass in TRUE in order to actually test get call locally, it will use the DOMAIN and STATION_API_CALL at the top
   // ---- Pass in false to test network connection and see what a working get request looks like
-  get(bool test) async {
+  Future<http.Response> get(bool test) async {
     developer.log("GET CALLED");
-
+    var frame = {
+      'uuid': this.UUID,
+      'lock_id': this.lock_ID.toString(),
+      'state': this.state.toString(),
+    };
     if (test == true) {
       String HttpString = DOMAIN + STATION_API_CALL;
       developer.log("GET STRING: " + HttpString);
 
-      final response = await http.get(HttpString);
+
+      final uri = Uri.http('rackServer:8000', '/api/lock/', frame);
+      final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+      final http.Response response = await http.get(uri, headers: headers);
+
+
       developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
 
-      String responseString = json.decode(response.body).toString();
-      developer.log(responseString);
+      developer.log('response: ' + response.body.toString());
+      return response;
     }
 
     //EXAMPLE OF WORKING GET RESPONSE
     else {
-      final sampleresponse =
-          await http.get('https://jsonplaceholder.typicode.com/albums/1');
-      developer
-          .log("HTTP STATUS CODE: " + sampleresponse.statusCode.toString());
+      final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
+      developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
 
-      String sampleString = json.decode(sampleresponse.body).toString();
-      developer.log(sampleString);
+      developer.log('response: ' + response.body.toString());
+      return response;
     }
   }
 }

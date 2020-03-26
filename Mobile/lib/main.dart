@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'HTTPHelper.dart';
 
@@ -39,27 +42,47 @@ class _MyHomePageState extends State<MyHomePage> {
   var _AvailableLocks = ['Lock 1', 'Lock 2'];
   var _currentLock = 'Lock 1';
 
-  void lock_and_unlock() {
+  String get_cur_uuid() {
+    if (_currentStation == 'Station 1') {
+        return "b80e7c2a-91d1-4718-a1f3-2e2c7d260646";
+    }
+    else if (_currentStation == 'Station 2') {
+      return "095a6367-0fc7-4a91-995f-a7268c6e76cf";
+    }
+    return "UNKOWN-LOCK";
+  }
+
+  int get_cur_lock() {
+    developer.log(_currentLock);
+    if (_currentLock == 'Lock 1') {
+      return 0;
+    }
+    else if (_currentLock == 'Lock 2') {
+      return 1;
+    }
+    return -1;
+  }
+
+  Future<bool> get_lock_state() async{
+    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(),0);
+    final response = await HTTP.get(true);
+    Map<String, dynamic> result = json.decode(response.body);
+    return result['state']==1;
+  }
+
+  set_lock_state(bool state) async {
+    var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(),state?1:0);
+    final response = await HTTP.post();
+  }
+
+  lock_and_unlock() async{
     //TODO Create drop down menu with list of the locks, hardcode for now
-    //Variables for interacting with the locks, set them as you need to
-    String UUID = "UUID Placeholder";
-    int lock_ID = 00000;
-    int state = 00000;
 
-    //Creating HTTP Object
-    var HTTP = HTTPHelper(UUID, lock_ID, state);
-
-    //Attempting to post, this will fail until the DOMAIN string inside of it is set to real value
-    HTTP.post();
-
-    //This is doing a get request to a working endpoint online
-    HTTP.get(false);
-
-    //This will attempt to use the variables stored inside HTTP to do an actual get request from the server
-    HTTP.get(true);
+    var state = await get_lock_state();
+    set_lock_state(!state);
 
     setState(() {
-      if (_counter == "false") {
+      if (!state) {
         //TODO handle async issue so that I can print portion of json
         _counter = "true";
       } else {
@@ -149,7 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child:
                 (_counter == "true") ? Icon(Icons.lock) : Icon(Icons.lock_open),
             //Alternating Icon Color
-            backgroundColor: (_counter == "true") ? Colors.red : Colors.green,
+            backgroundColor: (_counter == "true") ? Colors.green : Colors.red,
             splashColor: Colors.amber,
           ),
         ),
