@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse 
+from django.http import HttpResponse, JsonResponse
 from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -78,9 +78,8 @@ def LockStationView (request):
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
 
     if request.method == 'GET':
-        payload = json.loads (request.body)
-        station_uuid = payload['uuid']
-        lock_id = payload['lock_id']
+        station_uuid = request.GET['uuid']
+        lock_id = int(request.GET['lock_id'])
 
         try:
             station = Station.objects.get (uuid = station_uuid)
@@ -91,8 +90,9 @@ def LockStationView (request):
         payload = {'lock_id': lock_id}
 
         r = requests.get (url, json=payload)
+        payload = json.loads(r.text)
 
         if r.status_code == 200:
-            return HttpResponse (r.text)
+            return JsonResponse(payload)
         else:
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
