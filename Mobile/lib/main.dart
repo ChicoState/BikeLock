@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<bool> get_lock_state() async {
     //TODO error checking for failed attempts
     var HTTP = HTTPHelper(get_cur_uuid(), get_cur_lock(), 0);
-    final response = await HTTP.get(true);
+    final response = await HTTP.get();
     Map<String, dynamic> result = json.decode(response.body);
     return result['state'] == 1;
   }

@@ -52,36 +52,24 @@ class HTTPHelper {
   //Http Get request
   // ---- Pass in TRUE in order to actually test get call locally, it will use the DOMAIN and STATION_API_CALL at the top
   // ---- Pass in false to test network connection and see what a working get request looks like
-  Future<http.Response> get(bool test) async {
+  Future<http.Response> get() async {
     developer.log("GET CALLED");
     var frame = {
       'uuid': this.UUID,
       'lock_id': this.lock_ID.toString(),
       'state': this.state.toString(),
     };
-    if (test == true) {
-      String HttpString = DOMAIN + STATION_API_CALL;
-      developer.log("GET STRING: " + HttpString);
 
+    String HttpString = DOMAIN + STATION_API_CALL;
+    developer.log("GET STRING: " + HttpString);
 
-      final uri = Uri.http('rackServer:8000', '/api/lock/', frame);
-      final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
-      final http.Response response = await http.get(uri, headers: headers);
+    final uri = Uri.http('rackServer:8000', '/api/lock/', frame);
+    final headers = {HttpHeaders.contentTypeHeader: 'application/json'};
+    final http.Response response = await http.get(uri, headers: headers);
 
+    developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
 
-      developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
-
-      developer.log('response: ' + response.body.toString());
-      return response;
-    }
-
-    //EXAMPLE OF WORKING GET RESPONSE
-    else {
-      final response = await http.get('https://jsonplaceholder.typicode.com/albums/1');
-      developer.log("HTTP STATUS CODE: " + response.statusCode.toString());
-
-      developer.log('response: ' + response.body.toString());
-      return response;
-    }
+    developer.log('response: ' + response.body.toString());
+    return response;
   }
 }
