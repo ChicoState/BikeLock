@@ -72,7 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   set_lock_state(bool state) async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
+    var HTTP =
+        HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
     final response = await HTTP.post();
   }
 
@@ -180,15 +181,23 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _onStationItemSelected(String newValueSelected) {
+  void _onStationItemSelected(String newValueSelected) async {
     setState(() {
       this._currentStation = newValueSelected;
     });
+    var state = await get_lock_state();
+    setState(() {
+      _counter = state ? "true" : "false";
+    });
   }
 
-  void _onLockItemSelected(String newValueSelected) {
+  void _onLockItemSelected(String newValueSelected) async {
     setState(() {
       this._currentLock = newValueSelected;
+    });
+    var state = await get_lock_state();
+    setState(() {
+      _counter = state ? "true" : "false";
     });
   }
 }
