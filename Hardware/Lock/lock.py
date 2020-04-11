@@ -13,3 +13,6 @@ def set_Lock_State(lockid, state):
 
 def get_Lock_State(lockid):
     return GPIO.input(ledpins[lockid])
+
+def get_Lock_count():
+    return len(ledpins)
