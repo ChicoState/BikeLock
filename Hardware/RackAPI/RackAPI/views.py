@@ -24,7 +24,13 @@ def setLock(request):
 def lockSummary(request):
     if request.method == 'GET':
         states = lock.get_Lock_State()
+        available = False
+        for state in states:
+            if state == False:
+                available = True
+                break
         payload = {
-            'states': states
+            'available': available,
+            'states': states,
         }
         return JsonResponse(payload)
