@@ -7,6 +7,7 @@ from rest_framework import permissions
 from WebApp.models import Station
 import requests
 import json
+from datetime import datetime
 
 def get_client_ip (request):
     """
@@ -78,3 +79,19 @@ def LockStationView (request):
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
     else:
         return HttpResponse ("Miss me with that GET")
+
+@csrf_exempt
+def CreateUserView (request):
+    if request.method == 'POST':
+        payload = json.loads (request.body)
+        username = payload['username']
+        password = payload['password']
+        email = payload['email']
+        date = datetime.now()
+        
+        user = User.objects.create_user (username=username, 
+                                         password=password, 
+                                         email=email, 
+                                         date_joined=date)
+
+        return HttpResponse ("Hi!")
