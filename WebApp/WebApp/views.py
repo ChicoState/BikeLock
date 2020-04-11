@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse 
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -68,8 +68,8 @@ def LockStationView (request):
         except exceptions.ObjectDoesNotExist:
             return HttpResponse ("Invalid station UUID")
 
-        url = 'http://' + station.ip + ':8000/lock/' + lock_id
-        payload = {'state': state}
+        url = 'http://' + station.ip + ':8000/lock/'
+        payload = {'lock_id': lock_id, 'state': state}
 
         r = requests.post (url, json=payload)
 
@@ -77,21 +77,48 @@ def LockStationView (request):
             return HttpResponse ("Locked *thumbs up*")
         else:
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
-    else:
-        return HttpResponse ("Miss me with that GET")
+
+    if request.method == 'GET':
+        station_uuid = request.GET['uuid']
+        lock_id = int(request.GET['lock_id'])
+
+        try:
+            station = Station.objects.get (uuid = station_uuid)
+        except exceptions.ObjectDoesNotExist:
+            return HttpResponse ("Invalid station UUID")
+
+        url = 'http://' + station.ip + ':8000/lock/'
+        payload = {'lock_id': lock_id}
+
+        r = requests.get (url, json=payload)
+        payload = json.loads(r.text)
+
+        if r.status_code == 200:
+            return JsonResponse(payload)
+        else:
+            return HttpResponse (f"Something went wrong. Status code {r.status_code}")
 
 @csrf_exempt
 def CreateUserView (request):
     if request.method == 'POST':
         payload = json.loads (request.body)
+
         username = payload['username']
         password = payload['password']
         email = payload['email']
         date = datetime.now()
+
+        try:
+            User.objects.get (username=username)
+            return JsonResponse ({"error": "username_taken"})
+        except User.DoesNotExist:
+            pass
         
         user = User.objects.create_user (username=username, 
                                          password=password, 
                                          email=email, 
                                          date_joined=date)
 
-        return HttpResponse ("Hi!")
+        return JsonResponse ({"username": username})
+    else:
+        return HttpResponseForbidden (['POST'])
