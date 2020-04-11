@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'HTTPHelper.dart';
+import 'login_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,13 +15,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-//      home: MyHomePage(title: 'Super Bike Lock'),
-      home: Scaffold(
-        body: Center(
-            child: new Center(
-          child: MyHomePage(title: 'Super Bike Lock'),
-        )),
-      ),
+      home: new LoginPage(),
+//      home: Scaffold(
+//        body: Center(
+//            child: new Center(
+//          child: MyHomePage(title: 'Super Bike Lock'),
+//        )),
+//      ),
     );
   }
 }
