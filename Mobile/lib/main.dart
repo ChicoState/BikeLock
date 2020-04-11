@@ -15,13 +15,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: new LoginPage(),
-//      home: Scaffold(
-//        body: Center(
-//            child: new Center(
-//          child: MyHomePage(title: 'Super Bike Lock'),
-//        )),
-//      ),
+
+///Uncomment this and comment out the other home tag to view login/account creation.
+//      home: new LoginPage(),
+    ///Comment from here to other comment tag
+      home: Scaffold(
+        body: Center(
+            child: new Center(
+          child: MyHomePage(title: 'Super Bike Lock'),
+        )),
+      ),
+      ///Comment Tag
+
     );
   }
 }

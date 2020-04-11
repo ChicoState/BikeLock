@@ -74,11 +74,9 @@ class HTTPHelper {
       'email': email,
     });
 
-
 //    String url = METHOD + WEBSERVER + ACCOUNT_CREATION_URL;
 //    developer.log(url);
 //    developer.log(frame);
-
     //Post request to actually create account
     http.Response response = await http.post(
         METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
@@ -87,5 +85,7 @@ class HTTPHelper {
     developer.log('HTTP GET RESPONSE: ' + response.body.toString());
 
   }
+
+//TODO Create Sign in functionality
 
 }

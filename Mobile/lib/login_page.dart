@@ -1,80 +1,192 @@
 import 'package:flutter/material.dart';
+import 'primary_button.dart';
+
 import 'HTTPHelper.dart';
 
+
 class LoginPage extends StatefulWidget {
+  LoginPage({Key key, this.title, this.onSignIn}) : super(key: key);
+
+  final String title;
+//  final BaseAuth auth;
+  final VoidCallback onSignIn;
 
   @override
-  State<StatefulWidget> createState() => new _LoginPageState();
-
+  _LoginPageState createState() => new _LoginPageState();
 }
 
-  class _LoginPageState extends State<LoginPage>{
+enum FormType {
+  login,
+  register
+}
 
-  final formKey = new GlobalKey<FormState>();
+class _LoginPageState extends State<LoginPage> {
+  static final formKey = new GlobalKey<FormState>();
 
   String _email;
   String _username;
   String _password;
+  FormType _formType = FormType.login;
+  String _authHint = '';
 
   bool validateAndSave() {
     final form = formKey.currentState;
-    if(form.validate()){
+    if (form.validate()) {
       form.save();
       print('Form is Valid. Email: $_email, Username:$_username password: $_password');
       return true;
-    } else {
-      print('Form is invalid. Email: $_email, password: $_password');
-      return false;
     }
+    print('Form is invalid. Email: $_email, password: $_password');
+    return false;
   }
 
   void validateAndSubmit() async {
-    if(validateAndSave()){
-        HTTPHelper createUserRequest = new HTTPHelper.empty();
-        createUserRequest.createUser(_username, _password, _email);
+    if (validateAndSave()) {
+      try {
+        HTTPHelper createUserRequest = HTTPHelper.empty();
+        //TODO update with sign in funcionality instead of creating account everytime
+        String userId = (_formType == FormType.login
+            ? await createUserRequest.createUser(_username, _password, _email)
+            : await createUserRequest.createUser(_username, _password, _email)) as String;
+        setState(() {
+          _authHint = 'Signed In\n\nUser id: $userId';
+        });
+        widget.onSignIn();
       }
+      catch (e) {
+        setState(() {
+          _authHint = 'Sign In Error\n\n${e.toString()}';
+        });
+        print(e);
+      }
+    } else {
+      setState(() {
+        _authHint = '';
+      });
+    }
   }
+
+  void moveToRegister() {
+    formKey.currentState.reset();
+    setState(() {
+      _formType = FormType.register;
+      _authHint = '';
+    });
+  }
+
+  void moveToLogin() {
+    formKey.currentState.reset();
+    setState(() {
+      _formType = FormType.login;
+      _authHint = '';
+    });
+  }
+
+  List<Widget> usernameAndPassword() {
+    return [
+      padded(child: new TextFormField(
+        key: new Key('email'),
+        decoration: new InputDecoration(labelText: 'Email'),
+        autocorrect: false,
+        validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
+        onSaved: (val) => _email = val,
+      )),
+      padded(child: new TextFormField(
+        key: new Key('password'),
+        decoration: new InputDecoration(labelText: 'Password'),
+        obscureText: true,
+        autocorrect: false,
+        validator: (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
+        onSaved: (val) => _password = val,
+      )),
+    ];
+  }
+
+  List<Widget> submitWidgets() {
+    switch (_formType) {
+      case FormType.login:
+        return [
+          new PrimaryButton(
+              key: new Key('login'),
+              text: 'Login',
+              height: 44.0,
+              onPressed: validateAndSubmit
+          ),
+          new FlatButton(
+              key: new Key('need-account'),
+              child: new Text("Need an account? Register"),
+              onPressed: moveToRegister
+          ),
+        ];
+      case FormType.register:
+        return [
+          new PrimaryButton(
+              key: new Key('register'),
+              text: 'Create an account',
+              height: 44.0,
+              onPressed: validateAndSubmit
+          ),
+          new FlatButton(
+              key: new Key('need-login'),
+              child: new Text("Have an account? Login"),
+              onPressed: moveToLogin
+          ),
+        ];
+    }
+    return null;
+  }
+
+  Widget hintText() {
+    return new Container(
+      //height: 80.0,
+        padding: const EdgeInsets.all(32.0),
+        child: new Text(
+            _authHint,
+            key: new Key('hint'),
+            style: new TextStyle(fontSize: 18.0, color: Colors.grey),
+            textAlign: TextAlign.center)
+    );
+  }
+
+
   @override
-    Widget build(BuildContext context){
-
-      return new Scaffold(
+  Widget build(BuildContext context) {
+    return new Scaffold(
         appBar: new AppBar(
-          title: new Text('Account Creation Demo'),
+          title: new Text("Super Bike Lock"),
         ),
-        body: new Container(
-          padding: EdgeInsets.all(16.0),
-          child: new Form(
-            key: formKey,
+        backgroundColor: Colors.grey[300],
+        body: new SingleChildScrollView(child: new Container(
+            padding: const EdgeInsets.all(16.0),
             child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                new TextFormField(
-                  decoration: new InputDecoration(labelText: 'Email'),
-                  validator: (value) => value.isEmpty ? 'Email can\'t be empty' : null,
-                  onSaved: (value) => _email = value,
-                ),
-                new TextFormField(
-                  decoration: new InputDecoration(labelText: 'Username'),
-                  validator: (value) => value.isEmpty ? 'Username can\'t be empty' : null,
-                  onSaved: (value) => _username = value,
-                ),
-                new TextFormField(
-                  decoration: new InputDecoration(labelText: 'Password'),
-                  obscureText: true,
-                  validator: (value) => value.isEmpty ? 'Password can\'t be empty' : null,
-                  onSaved: (value) => _password = value,
-                ),
-                new RaisedButton(
-                  child: new Text('Login', style: new TextStyle(fontSize: 20.0)),
-                    onPressed: validateAndSubmit,
-                )
-              ]
+                children: [
+                  new Card(
+                      child: new Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            new Container(
+                                padding: const EdgeInsets.all(16.0),
+                                child: new Form(
+                                    key: formKey,
+                                    child: new Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: usernameAndPassword() + submitWidgets(),
+                                    )
+                                )
+                            ),
+                          ])
+                  ),
+                  hintText()
+                ]
             )
-          )
-        )
-      );
+        ))
+    );
   }
 
-
+  Widget padded({Widget child}) {
+    return new Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: child,
+    );
+  }
 }
-
