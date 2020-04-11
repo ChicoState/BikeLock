@@ -18,9 +18,17 @@ from django.urls import path
 
 import RPi.GPIO as GPIO
 import lock
+import register
 
 from . import views
 lock.init()
+
+f = open('rack.conf')
+
+uuid = f.readline()
+if uuid[-1] == '\n':
+    uuid = uuid[:-1]
+register.registerRack(uuid)
 
 urlpatterns = [
     path('lock/', views.setLock),
