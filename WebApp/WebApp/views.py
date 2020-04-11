@@ -47,10 +47,17 @@ def StationView (request):
         stations = Station.objects.all()
 
         for station in stations:
-            response.append ({"uuid": str (station.uuid),
-                              "ip": station.ip})
+            url = 'http://' + station.ip + ':8000/summary/'
 
-        return HttpResponse (json.dumps (response))
+            r = requests.get (url)
+            print(r.text)
+            payload = json.loads (r.text)
+            payload['ip'] = station.ip
+
+            response.append (payload)
+            print(response)
+
+        return HttpResponse (json.dumps(response))
 
 
 @csrf_exempt
