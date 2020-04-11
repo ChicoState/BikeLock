@@ -24,5 +24,6 @@ lock.init()
 
 urlpatterns = [
     path('lock/', views.setLock),
+    path('summary/', views.lockSummary),
     path('admin/', admin.site.urls),
 ]

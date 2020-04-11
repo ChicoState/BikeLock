@@ -20,3 +20,11 @@ def setLock(request):
 
         return JsonResponse(payload)
 
+@csrf_exempt
+def lockSummary(request):
+    if request.method == 'GET':
+        states = lock.get_Lock_State()
+        payload = {
+            'states': states
+        }
+        return JsonResponse(payload)
