@@ -60,6 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
     return -1;
   }
 
+
+  //TODO Add API docs to readme
   Future<bool> get_lock_state() async {
     //TODO error checking for failed attempts
     var HTTP = HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), 0);
