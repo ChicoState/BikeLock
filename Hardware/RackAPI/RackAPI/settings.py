@@ -123,3 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+f = open(f'{BASE_DIR}/../Config/rack.conf')
+UUID = f.readline()
+if UUID[-1] == '\n':
+    UUID = UUID[:-1]
+

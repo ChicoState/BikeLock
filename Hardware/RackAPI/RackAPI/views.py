@@ -1,5 +1,6 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
+from django.conf import settings
 import lock
 import json
 
@@ -30,6 +31,7 @@ def lockSummary(request):
                 available = True
                 break
         payload = {
+            'uuid': settings.UUID,
             'available': available,
             'states': states,
         }

@@ -15,20 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
 
 import RPi.GPIO as GPIO
 import lock
 import register
 
 from . import views
+
 lock.init()
-
-f = open('rack.conf')
-
-uuid = f.readline()
-if uuid[-1] == '\n':
-    uuid = uuid[:-1]
-register.registerRack(uuid)
+register.registerRack(settings.UUID)
 
 urlpatterns = [
     path('lock/', views.setLock),
