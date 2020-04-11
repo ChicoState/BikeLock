@@ -1,12 +1,13 @@
 from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
 from WebApp.models import Station
 import requests
 import json
+from datetime import datetime
 
 def get_client_ip (request):
     """
@@ -103,3 +104,28 @@ def LockStationView (request):
             return JsonResponse(payload)
         else:
             return HttpResponse (f"Something went wrong. Status code {r.status_code}")
+
+@csrf_exempt
+def CreateUserView (request):
+    if request.method == 'POST':
+        payload = json.loads (request.body)
+
+        username = payload['username']
+        password = payload['password']
+        email = payload['email']
+        date = datetime.now()
+
+        try:
+            User.objects.get (username=username)
+            return JsonResponse ({"error": "username_taken"})
+        except User.DoesNotExist:
+            pass
+        
+        user = User.objects.create_user (username=username, 
+                                         password=password, 
+                                         email=email, 
+                                         date_joined=date)
+
+        return JsonResponse ({"username": username})
+    else:
+        return HttpResponseForbidden (['POST'])
