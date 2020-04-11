@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Let the server know where the lock module is
 sys.path.insert(0, f'{BASE_DIR}/../Lock')
-sys.path.insert(0, f'{BASE_DIR}/../Bootup')
+sys.path.insert(0, f'{BASE_DIR}/../Config')
 
 
 # Quick-start development settings - unsuitable for production
