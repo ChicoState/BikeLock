@@ -18,7 +18,7 @@ class _StationFinderState extends State<StationFinder> {
   //TODO Add API docs to readme
   void get_station_state() async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper('/api/station/', "", 0, 0);
+    var HTTP = HTTPHelper.method('/api/station/');
     final response = await HTTP.get();
     result = json.decode(response.body);
   }

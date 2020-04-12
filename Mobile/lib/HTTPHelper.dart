@@ -31,7 +31,12 @@ class HTTPHelper {
     this.lock_ID = lock_ID;
     this.state = state;
   }
-
+  HTTPHelper.method(String method) {
+    this.api_method = method;
+    this.UUID = "";
+    this.lock_ID = 0;
+    this.state = 0;
+  }
   HTTPHelper.empty();
 
   //Post request using JSON
