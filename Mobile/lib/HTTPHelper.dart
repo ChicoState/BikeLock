@@ -18,6 +18,7 @@ final String WEBSERVER = "0.0.0.0:8000";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
+  //TODO make all these initialized in each function instead of entire class having to use them everytime
   String api_method;
   String UUID;
   int lock_ID;
@@ -66,24 +67,33 @@ class HTTPHelper {
     return response;
   }
 
-  Future<http.Response> createUser(String username, String password, String email) async {
+  Future<String> createUser(String email, String password) async {
     //Creating data to be sent.
     var frame = json.encode({
-      'username': username,
+//      'username': username,
       'password': password,
       'email': email,
     });
 
-//    String url = METHOD + WEBSERVER + ACCOUNT_CREATION_URL;
-//    developer.log(url);
-//    developer.log(frame);
-    //Post request to actually create account
-    http.Response response = await http.post(
-        METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
+    String url = METHOD + WEBSERVER + ACCOUNT_CREATION_URL;
+    developer.log(url);
+    developer.log(frame);
 
-    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
-    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
-
+//    Post request to actually create account
+//    http.Response response = await http.post(
+//        METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
+//
+//    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+//    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
+//
+    //TODO uncomment to make useful
+    return "StringBeans";
+//    if(response.statusCode == 200){
+//      return email;
+//    }
+//    else{
+//      return null;
+//      }
   }
 
 //TODO Create Sign in functionality
