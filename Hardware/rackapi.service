@@ -1,0 +1,14 @@
+[Unit]
+Description=Service for starting the web interface to control the locks
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+User=pi
+Restart=on-failure
+RestartSec=3
+WorkingDirectory=/home/pi/SuperBikeLock/Hardware/RackAPI/
+ExecStart=/usr/bin/python3  /home/pi/SuperBikeLock/Hardware/RackAPI/manage.py runserver 0.0.0.0:8000
+
+[Install]
+WantedBy=multi-user.target
