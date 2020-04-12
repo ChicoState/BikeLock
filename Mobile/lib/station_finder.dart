@@ -13,7 +13,7 @@ class StationFinder extends StatefulWidget {
 class _StationFinderState extends State<StationFinder> {
 
   Map<String, dynamic> result;
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  //final _biggerFont = const TextStyle(fontSize: 1);
 
   //TODO Add API docs to readme
   void get_station_state() async {
@@ -23,29 +23,30 @@ class _StationFinderState extends State<StationFinder> {
     result = json.decode(response.body);
   }
 
-    final List<String> entries = <String>[];
-    final List<int> colorCodes = <int>[600, 500, 100];
-
-    void get_station_uuids(Map<String, dynamic> res) {
-      for (var i = 0; i < res.length; i++) {
-        entries.add(result['UUID']);
-      }
-    }
+  List<String> entries = <String>['Station A', 'Station B', 'Station C', 'Station D'];
+  final List<int> colorCodes = <int>[600, 500, 100];
 
   @override
   Widget build(BuildContext context) {
     return new ListView.separated(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(4),
       itemCount: entries.length,
       itemBuilder: (BuildContext context, int index) {
         return Container(
           height: 50,
-          color: Colors.amber[colorCodes[index]],
-          child: Center(child: Text('Entry ${entries[index]}')),
+          color: Colors.blueGrey,
+          child: Center(child: Text('${entries[index]}',
+            style : TextStyle(
+              color: Colors.black,
+              fontSize: 30,
+              decoration: TextDecoration.none,
+            ))),
         );
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
   }
+
+
 
 }
