@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:superbikelock/lock_info.dart';
 import 'HTTPHelper.dart';
 import 'dart:developer' as developer;
 
@@ -35,7 +36,6 @@ class _StationFinderState extends State<StationFinder> {
   Widget build(BuildContext context) {
     return new FutureBuilder(
       builder: (context, projectSnap) {
-
         // check if the future request is ready
         if (projectSnap.connectionState != ConnectionState.done) {
           return ListView();
@@ -47,30 +47,37 @@ class _StationFinderState extends State<StationFinder> {
 
         // create the ListView using the stations list
         return Scaffold(
-            appBar: AppBar(
-              title: Text(widget.title),
-              centerTitle: true
-            ),
-            body: ListView.separated(
-              padding: const EdgeInsets.all(4),
-              itemCount: stations.length,
-              itemBuilder: (context, index) {
-                developer.log(json.encode(stations[index]));
-                return Container(
-                  height: 50,
-                  color: Colors.blueGrey,
-                  child: Center(
-                      child: Text('${stations[index]['ip']}',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 30,
-                            decoration: TextDecoration.none,
-                          ))),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
-            ),
+          appBar: AppBar(title: Text(widget.title), centerTitle: true),
+          body: ListView.separated(
+            padding: const EdgeInsets.all(4),
+            itemCount: stations.length,
+            itemBuilder: (context, index) {
+              developer.log(json.encode(stations[index]));
+              return Container(
+                height: 50,
+                color: Colors.blueGrey,
+                child: ListTile(
+                  title: Text(
+                      '${stations[index]['ip']}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        decoration: TextDecoration.none,
+                      )
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LockInfo(title:"Super Bike Lock")),
+                    );
+                    developer.log(stations[index]['ip']);//Go to the next screen with Navigator.push
+                  },
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+          ),
         );
       },
       future: _stations,
