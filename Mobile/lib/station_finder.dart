@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'HTTPHelper.dart';
+import 'dart:developer' as developer;
 
 class StationFinder extends StatefulWidget {
   StationFinder({Key key, this.title}) : super(key: key);
@@ -11,42 +12,62 @@ class StationFinder extends StatefulWidget {
 }
 
 class _StationFinderState extends State<StationFinder> {
+  Future<dynamic> _stations;
 
-  Map<String, dynamic> result;
   //final _biggerFont = const TextStyle(fontSize: 1);
 
   //TODO Add API docs to readme
-  void get_station_state() async {
+  Future get_station_state() async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper.method('/api/station/');
+    var HTTP = HTTPHelper.method('/api/stations/');
     final response = await HTTP.get();
-    result = json.decode(response.body);
+    return response;
   }
 
-  List<String> entries = <String>['Station A', 'Station B', 'Station C', 'Station D'];
-  final List<int> colorCodes = <int>[600, 500, 100];
+  @override
+  void initState() {
+    _stations = get_station_state();
+    super.initState();
+    dynamic stations = _stations;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.separated(
-      padding: const EdgeInsets.all(4),
-      itemCount: entries.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          height: 50,
-          color: Colors.blueGrey,
-          child: Center(child: Text('${entries[index]}',
-            style : TextStyle(
-              color: Colors.black,
-              fontSize: 30,
-              decoration: TextDecoration.none,
-            ))),
+    return new FutureBuilder(
+      builder: (context, projectSnap) {
+
+        // check if the future request is ready
+        if (projectSnap.connectionState != ConnectionState.done) {
+          return ListView();
+        }
+
+        // parse the future request, now that it's ready
+        List<dynamic> stations = json.decode(projectSnap.data.body);
+        developer.log(stations.length.toString());
+
+        // create the ListView using the stations list
+        return new ListView.separated(
+          padding: const EdgeInsets.all(4),
+          itemCount: stations.length,
+          itemBuilder: (context, index) {
+            developer.log(json.encode(stations[index]));
+            return Container(
+              height: 50,
+              color: Colors.blueGrey,
+              child: Center(
+                  child: Text('${stations[index]['ip']}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        decoration: TextDecoration.none,
+                      ))),
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) =>
+              const Divider(),
         );
       },
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      future: _stations,
     );
   }
-
-
-
 }
