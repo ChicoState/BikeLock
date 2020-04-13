@@ -37,6 +37,9 @@ class _StationFinderState extends State<StationFinder> {
       builder: (context, projectSnap) {
         // check if the future request is ready
         if (projectSnap.connectionState != ConnectionState.done) {
+          if (projectSnap.connectionState == ConnectionState.waiting) {
+            _stations = get_station_state();
+          }
           return ListView();
         }
 
@@ -54,7 +57,7 @@ class _StationFinderState extends State<StationFinder> {
               developer.log(json.encode(stations[index]));
               return Container(
                 height: 50,
-                color: Colors.blueGrey,
+                color: stations[index]['available']? Colors.green : Colors.red,
                 child: ListTile(
                   title: Text(
                       '${stations[index]['ip']}',
@@ -65,6 +68,7 @@ class _StationFinderState extends State<StationFinder> {
                       )
                   ),
                   onTap: () {
+                    developer.log(stations[index]['ip']);
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LockInfo(
@@ -73,7 +77,6 @@ class _StationFinderState extends State<StationFinder> {
                           rackinfo:stations[index],
                       )),
                     );
-                    developer.log(stations[index]['ip']);//Go to the next screen with Navigator.push
                   },
                 ),
               );
