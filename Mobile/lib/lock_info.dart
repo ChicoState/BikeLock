@@ -6,8 +6,9 @@ import 'HTTPHelper.dart';
 import 'auth.dart';
 
 class LockInfo extends StatefulWidget {
-  LockInfo({Key key, this.title, BaseAuth auth, void Function() onSignOut}) : super(key: key);
+  LockInfo({Key key, this.title, this.rackuuid, BaseAuth auth, void Function() onSignOut}) : super(key: key);
   final String title;
+  final String rackuuid;
 
   @override
   _LockInfoState createState() => _LockInfoState();
@@ -17,12 +18,11 @@ class _LockInfoState extends State<LockInfo> {
   bool _lockState = false;
   int _numLocks = 1;
   int _curLock = 0;
-  String _lockUUID = 'a6a8a594-7594-4bd3-b761-3f68a63667d5';
   List<String> _stationLocks = ['0'];
 
   Future<bool> getLockState() async {
     //TODO error checking for failed attempts
-    var http = HTTPHelper('/api/lock/', _lockUUID, _curLock, 0);
+    var http = HTTPHelper('/api/lock/', widget.rackuuid, _curLock, 0);
     final response = await http.get();
     Map<String, dynamic> result = json.decode(response.body);
     return result['state'] == 1;
@@ -30,7 +30,7 @@ class _LockInfoState extends State<LockInfo> {
 
   setLockState(bool state) async {
     //TODO error checking for failed attempts
-    var http = HTTPHelper('/api/lock/', _lockUUID, _curLock, state ? 1 : 0);
+    var http = HTTPHelper('/api/lock/', widget.rackuuid, _curLock, state ? 1 : 0);
     final response = await http.post();
   }
 
@@ -56,6 +56,12 @@ class _LockInfoState extends State<LockInfo> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            Text(
+              widget.rackuuid,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            SizedBox(height: 50),
 
             // lock state text widget
             Text(

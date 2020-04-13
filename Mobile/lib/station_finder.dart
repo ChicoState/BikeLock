@@ -68,7 +68,7 @@ class _StationFinderState extends State<StationFinder> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LockInfo(title:"Super Bike Lock")),
+                      MaterialPageRoute(builder: (context) => LockInfo(title:widget.title, rackuuid:stations[index]["uuid"])),
                     );
                     developer.log(stations[index]['ip']);//Go to the next screen with Navigator.push
                   },
