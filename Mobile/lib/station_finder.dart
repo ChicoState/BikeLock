@@ -29,7 +29,6 @@ class _StationFinderState extends State<StationFinder> {
   void initState() {
     _stations = get_station_state();
     super.initState();
-    dynamic stations = _stations;
   }
 
   @override
@@ -68,7 +67,11 @@ class _StationFinderState extends State<StationFinder> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LockInfo(title:widget.title, rackuuid:stations[index]["uuid"])),
+                      MaterialPageRoute(builder: (context) => LockInfo(
+                          title:widget.title,
+                          rackuuid:stations[index]["uuid"],
+                          rackinfo:stations[index],
+                      )),
                     );
                     developer.log(stations[index]['ip']);//Go to the next screen with Navigator.push
                   },

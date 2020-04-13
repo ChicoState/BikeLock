@@ -6,9 +6,10 @@ import 'HTTPHelper.dart';
 import 'auth.dart';
 
 class LockInfo extends StatefulWidget {
-  LockInfo({Key key, this.title, this.rackuuid, BaseAuth auth, void Function() onSignOut}) : super(key: key);
+  LockInfo({Key key, this.title, this.rackuuid, this.rackinfo, BaseAuth auth, void Function() onSignOut}) : super(key: key);
   final String title;
   final String rackuuid;
+  Map<String, dynamic> rackinfo;
 
   @override
   _LockInfoState createState() => _LockInfoState();
@@ -18,7 +19,7 @@ class _LockInfoState extends State<LockInfo> {
   bool _lockState = false;
   int _numLocks = 1;
   int _curLock = 0;
-  List<String> _stationLocks = ['0'];
+  List<String> _stationLocks = [];
 
   Future<bool> getLockState() async {
     //TODO error checking for failed attempts
@@ -44,6 +45,17 @@ class _LockInfoState extends State<LockInfo> {
     setState(() { this._curLock = newValueSelected; });
     var state = await getLockState();
     setState(() { _lockState = state ? true : false; });
+  }
+
+  @override
+  void initState() {
+    _lockState = widget.rackinfo['states'][0] == 1;
+    _numLocks = widget.rackinfo['states'].length;
+    _curLock = 0;
+    for (var i = 0; i < _numLocks; i++) {
+      _stationLocks.add(i.toString());
+    }
+    super.initState();
   }
 
   @override
