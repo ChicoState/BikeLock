@@ -46,25 +46,31 @@ class _StationFinderState extends State<StationFinder> {
         developer.log(stations.length.toString());
 
         // create the ListView using the stations list
-        return new ListView.separated(
-          padding: const EdgeInsets.all(4),
-          itemCount: stations.length,
-          itemBuilder: (context, index) {
-            developer.log(json.encode(stations[index]));
-            return Container(
-              height: 50,
-              color: Colors.blueGrey,
-              child: Center(
-                  child: Text('${stations[index]['ip']}',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 30,
-                        decoration: TextDecoration.none,
-                      ))),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) =>
+        return Scaffold(
+            appBar: AppBar(
+              title: Text(widget.title),
+              centerTitle: true
+            ),
+            body: ListView.separated(
+              padding: const EdgeInsets.all(4),
+              itemCount: stations.length,
+              itemBuilder: (context, index) {
+                developer.log(json.encode(stations[index]));
+                return Container(
+                  height: 50,
+                  color: Colors.blueGrey,
+                  child: Center(
+                      child: Text('${stations[index]['ip']}',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 30,
+                            decoration: TextDecoration.none,
+                          ))),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
+            ),
         );
       },
       future: _stations,
