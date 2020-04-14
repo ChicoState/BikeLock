@@ -50,13 +50,16 @@ def StationView (request):
         for station in stations:
             url = 'http://' + station.ip + ':8000/summary/'
 
-            r = requests.get (url)
-            print(r.text)
+            try:
+                r = requests.get (url)
+            except requests.exceptions.ConnectionError:
+                #TODO: clear ip field in database
+                continue
+
             payload = json.loads (r.text)
             payload['ip'] = station.ip
 
             response.append (payload)
-            print(response)
 
         return HttpResponse (json.dumps(response))
 
