@@ -34,7 +34,7 @@ def StationView (request):
         try:
             station = Station.objects.get (uuid = station_uuid)
         except exceptions.ObjectDoesNotExist:
-            return HttpResponse ("Invalid station UUID")
+            return HttpResponse ("Invalid station UUID", status=500)
 
         station.ip = ip_addr
         station.save()
