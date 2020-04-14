@@ -85,7 +85,12 @@ def LockStationView (request):
         url = 'http://' + station.ip + ':8000/lock/'
         payload = {'lock_id': lock_id, 'state': state}
 
-        r = requests.post (url, json=payload)
+        try:
+            r = requests.post (url, json=payload)
+        except requests.exceptions.ConnectionError:
+            station.ip = ''
+            station.save()
+            return HttpResponse (f"Something went wrong. Station is not up.")
 
         if r.status_code == 200:
             return HttpResponse ("Locked *thumbs up*")
@@ -101,10 +106,19 @@ def LockStationView (request):
         except exceptions.ObjectDoesNotExist:
             return HttpResponse ("Invalid station UUID")
 
+        if not station.ip:
+            return HttpResponse (f"something went wrong. Station is not up.")
+
         url = 'http://' + station.ip + ':8000/lock/'
         payload = {'lock_id': lock_id}
 
-        r = requests.get (url, json=payload)
+        try:
+            r = requests.get (url, json=payload)
+        except requests.exceptions.ConnectionError:
+            station.ip = ''
+            station.save()
+            return HttpResponse (f"Something went wrong. Station is not up.")
+
         payload = json.loads(r.text)
 
         if r.status_code == 200:
