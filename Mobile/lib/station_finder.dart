@@ -35,11 +35,10 @@ class _StationFinderState extends State<StationFinder> {
   Widget build(BuildContext context) {
     return new FutureBuilder(
       builder: (context, projectSnap) {
+        //developer.log('building');
+
         // check if the future request is ready
         if (projectSnap.connectionState != ConnectionState.done) {
-          if (projectSnap.connectionState == ConnectionState.waiting) {
-            _stations = get_station_state();
-          }
           return ListView();
         }
 
@@ -60,23 +59,23 @@ class _StationFinderState extends State<StationFinder> {
                 color: stations[index]['available']? Colors.green : Colors.red,
                 child: ListTile(
                   title: Text(
-                      '${stations[index]['ip']}',
+                      '${stations[index]['name']}',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 30,
                         decoration: TextDecoration.none,
                       )
                   ),
-                  onTap: () {
-                    developer.log(stations[index]['ip']);
-                    Navigator.push(
+                  onTap: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LockInfo(
-                          title:widget.title,
-                          rackuuid:stations[index]["uuid"],
+                          title:stations[index]['name'],
+                          rackuuid:stations[index]['uuid'],
                           rackinfo:stations[index],
                       )),
                     );
+                    _stations = get_station_state();
                   },
                 ),
               );
