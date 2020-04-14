@@ -31,6 +31,7 @@ def lockSummary(request):
                 available = True
                 break
         payload = {
+            'name': settings.RACKNAME,
             'uuid': settings.UUID,
             'available': available,
             'states': states,
