@@ -48,12 +48,16 @@ def StationView (request):
         stations = Station.objects.all()
 
         for station in stations:
+            if not station.ip:
+                continue
+
             url = 'http://' + station.ip + ':8000/summary/'
 
             try:
                 r = requests.get (url)
             except requests.exceptions.ConnectionError:
-                #TODO: clear ip field in database
+                station.ip = ''
+                station.save()
                 continue
 
             payload = json.loads (r.text)
