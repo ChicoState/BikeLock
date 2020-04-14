@@ -132,7 +132,5 @@ for line in f:
     val = " ".join(line.split()[1:])
     vals[key] = val
 
-print(vals)
-
 UUID = vals['uuid']
 RACKNAME = vals['name']
