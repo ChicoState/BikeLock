@@ -124,8 +124,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-f = open(f'{BASE_DIR}/../Config/rack.conf')
-UUID = f.readline()
-if UUID[-1] == '\n':
-    UUID = UUID[:-1]
 
+vals = {}
+f = open(f'{BASE_DIR}/../Config/rack.conf')
+for line in f:
+    key = line.split()[0][:-1]
+    val = " ".join(line.split()[1:])
+    vals[key] = val
+
+print(vals)
+
+UUID = vals['uuid']
+RACKNAME = vals['name']
