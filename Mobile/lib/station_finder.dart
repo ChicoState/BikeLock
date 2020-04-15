@@ -39,7 +39,9 @@ class _StationFinderState extends State<StationFinder> {
 
         // check if the future request is ready
         if (projectSnap.connectionState != ConnectionState.done) {
-          return ListView();
+          return Scaffold(
+              appBar: AppBar(title: Text(widget.title), centerTitle: true),
+          );
         }
 
         // parse the future request, now that it's ready
