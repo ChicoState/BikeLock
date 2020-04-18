@@ -1,0 +1,9 @@
+matrix:
+  include:
+    - language: python
+      install:
+        - pip install -r WebApp/requirements.txt
+      before_script:
+        - cd WebApp 
+      script:
+        - python manage.py test
