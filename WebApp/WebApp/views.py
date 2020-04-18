@@ -48,10 +48,24 @@ def StationView (request):
         stations = Station.objects.all()
 
         for station in stations:
-            response.append ({"uuid": str (station.uuid),
-                              "ip": station.ip})
+            if not station.ip:
+                continue
 
-        return HttpResponse (json.dumps (response))
+            url = 'http://' + station.ip + ':8000/summary/'
+
+            try:
+                r = requests.get (url)
+            except requests.exceptions.ConnectionError:
+                station.ip = ''
+                station.save()
+                continue
+
+            payload = json.loads (r.text)
+            payload['ip'] = station.ip
+
+            response.append (payload)
+
+        return HttpResponse (json.dumps(response))
 
 
 @csrf_exempt
@@ -71,12 +85,17 @@ def LockStationView (request):
         url = 'http://' + station.ip + ':8000/lock/'
         payload = {'lock_id': lock_id, 'state': state}
 
-        r = requests.post (url, json=payload)
+        try:
+            r = requests.post (url, json=payload)
+        except requests.exceptions.ConnectionError:
+            station.ip = ''
+            station.save()
+            return HttpResponse (f"Something went wrong. Station is not up.", status=500)
 
         if r.status_code == 200:
             return HttpResponse ("Locked *thumbs up*")
         else:
-            return HttpResponse (f"Something went wrong. Status code {r.status_code}")
+            return HttpResponse (f"Something went wrong. Status code {r.status_code}", status=500)
 
     if request.method == 'GET':
         station_uuid = request.GET['uuid']
@@ -87,16 +106,25 @@ def LockStationView (request):
         except exceptions.ObjectDoesNotExist:
             return HttpResponse ("Invalid station UUID")
 
+        if not station.ip:
+            return HttpResponse (f"something went wrong. Station is not up.", status=500)
+
         url = 'http://' + station.ip + ':8000/lock/'
         payload = {'lock_id': lock_id}
 
-        r = requests.get (url, json=payload)
+        try:
+            r = requests.get (url, json=payload)
+        except requests.exceptions.ConnectionError:
+            station.ip = ''
+            station.save()
+            return HttpResponse (f"Something went wrong. Station is not up.", status=500)
+
         payload = json.loads(r.text)
 
         if r.status_code == 200:
             return JsonResponse(payload)
         else:
-            return HttpResponse (f"Something went wrong. Status code {r.status_code}")
+            return HttpResponse (f"Something went wrong. Status code {r.status_code}", status=500)
 
 @csrf_exempt
 def CreateUserView (request):
