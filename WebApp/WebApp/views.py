@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden, JsonResponse
 from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
@@ -33,8 +33,8 @@ def StationView (request):
 
         try:
             station = Station.objects.get (uuid = station_uuid)
-        except exceptions.ObjectDoesNotExist:
-            return HttpResponse ("Invalid station UUID")
+        except (exceptions.ObjectDoesNotExist, exceptions.ValidationError):
+            return HttpResponseBadRequest()
 
         station.ip = ip_addr
         station.save()
