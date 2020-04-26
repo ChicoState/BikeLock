@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, timezone
 import uuid
 
 class Station (models.Model):
@@ -20,10 +20,10 @@ class Bike (models.Model):
     timeOfReservation = models.DateTimeField (auto_now_add=True)
 
     def timeElapsed (self):
-        timeDelta = datetime.now() - self.timeOfReservation
+        timeDelta = datetime.now(timezone.utc) - self.timeOfReservation
         totalSeconds = timeDelta.total_seconds()
         m, s = divmod (totalSeconds, 60)
-        h, m = divmod (totalSeconds, 60)
+        h, m = divmod (m, 60)
 
         return h, m, s
        
