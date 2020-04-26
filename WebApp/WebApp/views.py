@@ -54,7 +54,7 @@ def StationView (request):
             url = 'http://' + station.ip + ':8000/summary/'
 
             try:
-                r = requests.get (url)
+                r = requests.get (url, timeout=.5)
             except requests.exceptions.ConnectionError:
                 station.ip = ''
                 station.save()
