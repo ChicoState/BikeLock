@@ -134,3 +134,4 @@ for line in f:
 
 UUID = vals['uuid']
 RACKNAME = vals['name']
+RATE = vals['rate']

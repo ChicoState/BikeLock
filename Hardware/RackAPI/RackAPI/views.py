@@ -35,5 +35,6 @@ def lockSummary(request):
             'uuid': settings.UUID,
             'available': available,
             'states': states,
+            'rate': settings.RATE,
         }
         return JsonResponse(payload)
