@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf.urls import url
 from rest_framework import routers
 from WebApp import views
 
@@ -24,4 +25,6 @@ urlpatterns = [
     path('api/stations/', views.StationView),
     path('api/lock/', views.LockStationView),
     path('api/create-user/', views.CreateUserView),
+
+    url(r'^rest-auth/', include('rest_auth.urls')),
 ]
