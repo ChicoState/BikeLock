@@ -70,16 +70,14 @@ class HTTPHelper {
   Future<String> createUser(String email, String password) async {
     //Creating data to be sent.
     var frame = json.encode({
-//      'username': username,
       'password': password,
       'email': email,
     });
-
     String url = METHOD + WEBSERVER + ACCOUNT_CREATION_URL;
     developer.log(url);
     developer.log(frame);
 
-//    Post request to actually create account
+///    Post request to actually create account
 //    http.Response response = await http.post(
 //        METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
 //
@@ -93,7 +91,7 @@ class HTTPHelper {
 //    }
 //    else{
 //      return null;
-//      }
+//    }
   }
 
 //TODO Create Sign in functionality

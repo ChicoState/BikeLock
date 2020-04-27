@@ -47,7 +47,7 @@ class _RootPageState extends State<RootPage> {
         );
       case AuthStatus.signedIn:
         return new MyHomePage(
-            title: "stringy",
+            title: "Super Bike Lock",
             auth: widget.auth,
             onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
         );
