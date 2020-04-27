@@ -4,7 +4,8 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbid
 from django.core import exceptions
 from rest_framework import viewsets
 from rest_framework import permissions
-from WebApp.models import Station
+from rest_framework.authtoken.models import Token
+from WebApp.models import Station, Bike
 import requests
 import json
 from datetime import datetime
@@ -71,6 +72,14 @@ def StationView (request):
 @csrf_exempt
 def LockStationView (request):
     if request.method == 'POST':
+        # Authenticate User
+        auth_key = request.POST.get ('auth_key')
+
+        try:
+            user = Token.objects.get (key = auth_key).user
+        except Token.DoesNotExist:
+            return HttpResponse('Unauthorized', 401)
+
         # Get request parameters
         payload = json.loads (request.body)
         station_uuid = payload['uuid']
@@ -93,6 +102,11 @@ def LockStationView (request):
             return HttpResponse (f"Something went wrong. Station is not up.", status=500)
 
         if r.status_code == 200:
+            Bike.objects.create (user = user,
+                                 station = station,
+                                 lockID = lock_id,
+                                 rate=0.0)
+
             return HttpResponse ("Locked *thumbs up*")
         else:
             return HttpResponse (f"Something went wrong. Status code {r.status_code}", status=500)
@@ -150,3 +164,26 @@ def CreateUserView (request):
         return JsonResponse ({"username": username})
     else:
         return HttpResponseForbidden (['POST'])
+
+@csrf_exempt
+def StatusView (request):
+    if request.method != 'GET':
+        return HttpResponseForbidden (['GET'])
+    
+    auth_key = request.GET.get ('auth_key')
+
+    try:
+        user = Token.objects.get (key = auth_key)
+    except Token.DoesNotExist:
+        return HttpResponse('Unauthorized', 401)
+
+    payload = []
+
+    for bike in Bike.objects.all():
+        payload.append ({'station_uuid': bike.station.uuid,
+                         'lock_id': bike.lockID,
+                         'rate': bike.rate,
+                         'time_elapsed': bike.timeElapsed()})
+
+    return JsonResponse (payload)
+

@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/stations/', views.StationView),
     path('api/lock/', views.LockStationView),
     path('api/create-user/', views.CreateUserView),
+    path('api/status/', views.CreateUserView),
 
     url(r'^rest-auth/', include('rest_auth.urls')),
 ]
