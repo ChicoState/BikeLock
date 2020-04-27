@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:superbikelock/lock_info.dart';
 import 'HTTPHelper.dart';
 import 'dart:developer' as developer;
 
@@ -12,41 +13,81 @@ class StationFinder extends StatefulWidget {
 }
 
 class _StationFinderState extends State<StationFinder> {
+  Future<dynamic> _stations;
 
-  Map<String, dynamic> result;
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  //final _biggerFont = const TextStyle(fontSize: 1);
 
   //TODO Add API docs to readme
-  void get_station_state() async {
+  Future get_station_state() async {
     //TODO error checking for failed attempts
-    var HTTP = HTTPHelper('/api/station/', "", 0, 0);
+    var HTTP = HTTPHelper.method('/api/stations/');
     final response = await HTTP.get();
-    result = json.decode(response.body);
+    return response;
   }
 
-    final List<String> entries = <String>[];
-    final List<int> colorCodes = <int>[600, 500, 100];
-
-    void get_station_uuids(Map<String, dynamic> res) {
-      for (var i = 0; i < res.length; i++) {
-        entries.add(result['UUID']);
-      }
-    }
+  @override
+  void initState() {
+    _stations = get_station_state();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return new ListView.separated(
-      padding: const EdgeInsets.all(8),
-      itemCount: entries.length,
-      itemBuilder: (BuildContext context, int index) {
-        return Container(
-          height: 50,
-          color: Colors.amber[colorCodes[index]],
-          child: Center(child: Text('Entry ${entries[index]}')),
+    return new FutureBuilder(
+      builder: (context, projectSnap) {
+        //developer.log('building');
+
+        // check if the future request is ready
+        if (projectSnap.connectionState != ConnectionState.done) {
+          return Scaffold(
+              appBar: AppBar(title: Text(widget.title), centerTitle: true),
+          );
+        }
+
+        // parse the future request, now that it's ready
+        List<dynamic> stations = json.decode(projectSnap.data.body);
+        developer.log(stations.length.toString());
+
+        // create the ListView using the stations list
+        return Scaffold(
+          appBar: AppBar(title: Text(widget.title), centerTitle: true),
+          body: ListView.separated(
+            padding: const EdgeInsets.all(4),
+            itemCount: stations.length,
+            itemBuilder: (context, index) {
+              developer.log(json.encode(stations[index]));
+              return Container(
+                height: 50,
+                color: stations[index]['available']? Colors.green : Colors.red,
+                child: ListTile(
+                  title: Text(
+                      '${stations[index]['name']}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        decoration: TextDecoration.none,
+                      )
+                  ),
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LockInfo(
+                          title:stations[index]['name'],
+                          rackuuid:stations[index]['uuid'],
+                          rackinfo:stations[index],
+                      )),
+                    );
+                    _stations = get_station_state();
+                  },
+                ),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) =>
+                const Divider(),
+          ),
         );
       },
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      future: _stations,
     );
   }
-
 }
