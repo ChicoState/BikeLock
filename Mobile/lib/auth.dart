@@ -8,7 +8,7 @@ abstract class BaseAuth {
   Future<String> currentUser();
   Future<String> signIn(String email, String password);
   Future<String> createUser(String email, String password);
-  Future<void> signOut();
+  Future<void> signOut(String email, String password);
 }
 
 class Auth implements BaseAuth {
@@ -16,27 +16,23 @@ class Auth implements BaseAuth {
   HTTPHelper HTTPFunctions = HTTPHelper.empty();
   String userID;
   Future<String> signIn(String email, String password) async {
-//    FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-    //TODO update with sign in funcionality instead of creating account everytime
-    String user = await HTTPFunctions.createUser(email, password);
+    String user = await HTTPFunctions.signInUser(email, password);
     userID = user;
     return userID;
   }
 
   Future<String> createUser(String email, String password) async {
-//    FirebaseUser user = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
     String user = await HTTPFunctions.createUser(email, password);
     userID = user;
     return userID;
   }
 
   Future<String> currentUser() async {
-//    FirebaseUser user = await _firebaseAuth.currentUser();
     return userID != null ? userID : null;
   }
 
-  Future<void> signOut() async {
-//    return _firebaseAuth.signOut();
+  Future<bool> signOut(String email, String password) async {
+    return await HTTPFunctions.signOutUser(email, password);
   }
 
 

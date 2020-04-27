@@ -6,7 +6,7 @@ import 'HTTPHelper.dart';
 
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key key, this.title, this.onSignIn, BaseAuth auth}) : super(key: key);
+    LoginPage({Key key, this.title, this.onSignIn, BaseAuth auth}) : super(key: key);
 
   final String title;
 //  final BaseAuth auth;
@@ -47,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
         HTTPHelper createUserRequest = HTTPHelper.empty();
         //TODO update with sign in funcionality instead of creating account everytime
         String userId = (_formType == FormType.login
-            ? await createUserRequest.createUser(_email, _password, )
-            : await createUserRequest.createUser(_email, _password, )) as String;
+            ? await createUserRequest.signInUser(_email, _password, )
+            : await createUserRequest.createUser(_email, _password, ));
         setState(() {
           _authHint = 'Signed In\n\nUser id: $userId';
         });

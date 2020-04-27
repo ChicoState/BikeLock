@@ -16,6 +16,10 @@ final String ACCOUNT_CREATION_URL = "/api/create-user/";
 
 final String WEBSERVER = "0.0.0.0:8000";
 
+final String SIGNIN_URL = "rest-auth/login/";
+
+final String SIGNOUT_URL = "rest-auth/logout/";
+
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
   //TODO make all these initialized in each function instead of entire class having to use them everytime
@@ -83,22 +87,74 @@ class HTTPHelper {
     developer.log(frame);
 
 ///    Post request to actually create account
-//    http.Response response = await http.post(
-//        METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
-//
-//    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
-//    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
+    http.Response response = await http.post(
+        METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
+
+    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
 //
     //TODO uncomment to make useful
-    return "StringBeans";
-//    if(response.statusCode == 200){
-//      return email;
-//    }
-//    else{
-//      return null;
-//    }
+//    return "StringBeans";
+    if(response.statusCode == 200){
+      return email;
+    }
+    else{
+      return null;
+    }
   }
 
-//TODO Create Sign in functionality
+  Future<String> signInUser(String email, String password) async {
+    //Creating data to be sent.
+    var frame = json.encode({
+      'password': password,
+      'email': email,
+    });
+    String url = METHOD + WEBSERVER + SIGNIN_URL;
+    developer.log(url);
+    developer.log(frame);
 
+    ///    Post request to actually create account
+    http.Response response = await http.post(
+        url, body: frame);
+
+    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
+
+    //TODO uncomment to make useful
+//    return "StringBeans";
+    if(response.statusCode == 200){
+      return email;
+    }
+    else{
+      return null;
+    }
+  }
+
+  Future<bool> signOutUser(String email, String password) async {
+    //Creating data to be sent.
+    var frame = json.encode({
+      'password': password,
+      'email': email,
+    });
+    String url = METHOD + WEBSERVER + SIGNOUT_URL;
+    developer.log(url);
+    developer.log(frame);
+
+    ///    Post request to actually create account
+
+    http.Response response = await http.post(
+        url, body: frame);
+
+    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
+
+    //TODO uncomment to make useful
+//    return "StringBeans";
+    if(response.statusCode == 200){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
 }
