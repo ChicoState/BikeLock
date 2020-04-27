@@ -8,6 +8,6 @@ matrix:
       before_script:
         - cd WebApp 
       script:
-        - python manage.py makemigrations
-        - python manage.py migrate
+        - python manage.py makemigrations WebApp
+        - python manage.py migrate WebApp
         - python manage.py test
