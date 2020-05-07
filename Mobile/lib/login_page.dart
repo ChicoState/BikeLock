@@ -4,6 +4,17 @@ import 'primary_button.dart';
 
 import 'HTTPHelper.dart';
 
+class EmailVerifier {
+  static String validate(String val) {
+    return val.isEmpty ? 'Email can\'t be empty.' : null;
+  }
+}
+
+class PasswordVerifier {
+  static String validate(String val) {
+    return val.isEmpty ? 'Password can\'t be empty.' : null;
+  }
+}
 
 class LoginPage extends StatefulWidget {
     LoginPage({Key key, this.title, this.onSignIn, BaseAuth auth}) : super(key: key);
@@ -89,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
         key: new Key('email'),
         decoration: new InputDecoration(labelText: 'Email'),
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'Email can\'t be empty.' : null,
+        validator: EmailVerifier.validate,
         onSaved: (val) => _email = val,
       )),
       padded(child: new TextFormField(
@@ -97,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
         decoration: new InputDecoration(labelText: 'Password'),
         obscureText: true,
         autocorrect: false,
-        validator: (val) => val.isEmpty ? 'Password can\'t be empty.' : null,
+        validator: PasswordVerifier.validate,
         onSaved: (val) => _password = val,
       )),
     ];
