@@ -1,0 +1,13 @@
+matrix:
+  include:
+  
+    # WebApp
+    - language: python
+      install:
+        - pip install -r WebApp/requirements.txt
+      before_script:
+        - cd WebApp 
+      script:
+        - python manage.py makemigrations WebApp
+        - python manage.py migrate WebApp
+        - python manage.py test

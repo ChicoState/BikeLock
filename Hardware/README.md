@@ -1,1 +1,1 @@
-We need to decide on hardware for the system.
+We need to decide on hardware for the system. Let's get started.
