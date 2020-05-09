@@ -167,23 +167,26 @@ def CreateUserView (request):
 
 @csrf_exempt
 def StatusView (request):
+    '''
     if request.method != 'GET':
         return HttpResponseForbidden (['GET'])
+    '''
     
     auth_key = request.GET.get ('auth_key')
 
     try:
-        user = Token.objects.get (key = auth_key)
+        user = Token.objects.get (key = auth_key).User
     except Token.DoesNotExist:
-        return HttpResponse('Unauthorized', 401)
+        return HttpResponse(status=401)
 
     payload = []
 
     for bike in Bike.objects.all():
-        payload.append ({'station_uuid': bike.station.uuid,
-                         'lock_id': bike.lockID,
-                         'rate': bike.rate,
-                         'time_elapsed': bike.timeElapsed()})
+        if bike.user == user:
+            payload.append ({'station_uuid': bike.station.uuid,
+			     'lock_id': bike.lockID,
+			     'rate': bike.rate,
+			     'time_elapsed': bike.timeElapsed()})
 
     return JsonResponse (payload)
 
