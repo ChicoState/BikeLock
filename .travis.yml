@@ -11,3 +11,6 @@ matrix:
         - python manage.py makemigrations WebApp
         - python manage.py migrate WebApp
         - python manage.py test
+        
+      after_success:
+        - coveralls 
