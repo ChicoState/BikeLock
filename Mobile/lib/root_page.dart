@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'auth.dart';
-import 'lock_selection_screen.dart';
 import 'login_page.dart';
+import 'rack_selection_screen.dart';
 
 
 class RootPage extends StatefulWidget {
@@ -46,11 +47,16 @@ class _RootPageState extends State<RootPage> {
           onSignIn: () => _updateAuthStatus(AuthStatus.signedIn),
         );
       case AuthStatus.signedIn:
-        return new MyHomePage(
-            title: "Super Bike Lock",
-            auth: widget.auth,
-            onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
-        );
+      // Displaying racks
+        return rack_selection_screen(
+            onSignOut: () =>
+                _updateAuthStatus(AuthStatus.notSignedIn
+                ));
+//        return new station_and_lock_selection_screen(
+//            title: "Super Bike Lock",
+//            auth: widget.auth,
+//            onSignOut: () => _updateAuthStatus(AuthStatus.notSignedIn)
+//        );
     }
   }
 }
