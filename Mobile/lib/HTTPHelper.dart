@@ -1,8 +1,8 @@
+import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
-import 'dart:convert';
 
 //This is the API String I found on the github to interface with the server
 final String STATION_API_CALL = "/api/lock/";
@@ -16,9 +16,9 @@ final String ACCOUNT_CREATION_URL = "/api/create-user/";
 
 final String WEBSERVER = "0.0.0.0:8000";
 
-final String SIGNIN_URL = "rest-auth/login/";
+final String SIGNIN_URL = "/rest-auth/login/";
 
-final String SIGNOUT_URL = "rest-auth/logout/";
+final String SIGNOUT_URL = "/rest-auth/logout/";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
@@ -35,12 +35,14 @@ class HTTPHelper {
     this.lock_ID = lock_ID;
     this.state = state;
   }
+
   HTTPHelper.method(String method) {
     this.api_method = method;
     this.UUID = "";
     this.lock_ID = 0;
     this.state = 0;
   }
+
   HTTPHelper.empty();
 
   //Post request using JSON
@@ -86,7 +88,7 @@ class HTTPHelper {
     developer.log(url);
     developer.log(frame);
 
-///    Post request to actually create account
+    ///    Post request to actually create account
     http.Response response = await http.post(
         METHOD + WEBSERVER + ACCOUNT_CREATION_URL, body: frame);
 
