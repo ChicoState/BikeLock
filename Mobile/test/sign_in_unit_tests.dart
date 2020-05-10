@@ -1,8 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:superbikelock/login_page.dart';
 import 'package:superbikelock/auth.dart';
-import 'package:superbikelock/HTTPHelper.dart';
-
 
 void main() {
 
@@ -86,7 +84,6 @@ test('login with invalid email and password, return null', () async {
     expect(response, null);
 
   });
-
 
 }
 

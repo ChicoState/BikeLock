@@ -14,29 +14,23 @@ void main() {
     // verify
   });
 
-  test('enter email and password but no user, return null', () async {
-
+  test('query station finder with station_finder_state, expect status 200 returned', () async {
 
     StationFinder station_finder = StationFinder();
 
-    String response = await station_finder.createState().get_station_state();
+    var response = await station_finder.createState().get_station_state();
 
-    // TODO Comment This
-    expect(response, null);
-
+    expect(response, '200');
   });
 
-  test('enter email and password but no user, return null', () async {
-
+  test('query station finder with station_finder_state after initializing station, expect status 200 returned', () async {
 
     StationFinder station_finder = StationFinder();
 
     station_finder.createState().initState();
-    String response = await station_finder.createState().get_station_state();
+    Future<dynamic> response = station_finder.createState().get_station_state();
 
-    // TODO Comment This
-    expect(response, null);
-
+    expect(response, '200');
   });
 
 }
