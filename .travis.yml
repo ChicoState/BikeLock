@@ -13,7 +13,7 @@ matrix:
         - python manage.py test
 
     # Mobile
-        language: dart
+    - language: dart
         before_script:
             - git clone https://github.com/flutter/flutter.git -b stable
             - ./flutter/bin/flutter doctor
