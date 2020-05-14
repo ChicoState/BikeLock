@@ -6,6 +6,15 @@ import uuid
 class Station (models.Model):
     uuid = models.UUIDField (primary_key=True, default=uuid.uuid4, editable=False)
     ip = models.GenericIPAddressField (default='', blank=True, null=True)
+    name = models.CharField (max_length=42, default='', blank=True, null=True)
+    description = models.CharField (max_length=280, default='', blank=True, null=True)
+    
+class Lock (models.Model):
+    lockID = models.IntegerField()
+    name = models.CharField (max_length=42, default='', blank=True, null=True)
+    description = models.CharField (max_length=280, default='', blank=True, null=True)
+    station = models.ForeignKey (Station, related_name='locks', on_delete=models.PROTECT)
+    user = models.ForeignKey (User, related_name='user', blank=True, null=True, on_delete=models.PROTECT)
 
 """
 A Bike entry in the database stores information about a user's actively
@@ -13,9 +22,8 @@ reserved lock, such as the time the lock was reserved and the rate at
 the time of reservation.
 """
 class Bike (models.Model):
-    user = models.ForeignKey (User, on_delete=models.PROTECT)
-    station = models.ForeignKey (Station, on_delete=models.PROTECT)
-    lockID = models.PositiveIntegerField()
+    user = models.ForeignKey (User, on_delete=models.PROTECT, related_name='bikes')
+    lock = models.ForeignKey (Lock, on_delete=models.PROTECT, related_name='bike')
     rate = models.DecimalField (max_digits=6, decimal_places=2)
     timeOfReservation = models.DateTimeField (auto_now_add=True)
 

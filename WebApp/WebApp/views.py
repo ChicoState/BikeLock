@@ -27,6 +27,8 @@ def get_client_ip (request):
 def StationView (request):
     if request.method == 'POST':
         payload = json.loads (request.body)
+
+
         station_uuid = payload['uuid']
         ip_addr = get_client_ip (request)
 
@@ -48,24 +50,21 @@ def StationView (request):
         response = []
         stations = Station.objects.all()
 
+        response = []
         for station in stations:
-            if not station.ip:
-                continue
+            schmoo = {'uuid': str(station.uuid),
+                      'name': station.name,
+                      'description': station.description,
+                      'locks': []}
 
-            url = 'http://' + station.ip + ':8000/summary/'
+            for lock in station.locks.all():
+                available = True if lock.user == None else False
+                schmoo['locks'].append ({'lockID': lock.lockID,
+                                         'name': lock.name,
+                                         'description': lock.description,
+                                         'available': available})
 
-            try:
-                r = requests.get (url, timeout=.5)
-            except requests.exceptions.ConnectionError:
-                station.ip = ''
-                station.save()
-                continue
-
-            payload = json.loads (r.text)
-            payload['ip'] = station.ip
-
-            response.append (payload)
-
+            response.append(schmoo)
         return HttpResponse (json.dumps(response))
 
 
@@ -181,12 +180,26 @@ def StatusView (request):
 
     payload = []
 
-    for bike in Bike.objects.all():
-        if bike.user == user:
-            payload.append ({'station_uuid': bike.station.uuid,
-			     'lock_id': bike.lockID,
-			     'rate': bike.rate,
-			     'time_elapsed': bike.timeElapsed()})
+    station_dictionary = {}
+
+    for bike in user.bikes:
+        lock = bike.lock
+        station = lock.station
+
+        if station.uuid not in station_dictionary:
+            num_locks = 0
+            for lock in station.locks:
+                num_locks += 1
+
+            station_dictionary[station.uuid] = {'station_uuid': station.uuid,
+                                                'station_name': station.name,
+                                                'station_description': station_description,
+                                                'total_locks': num_locks,
+                                                'locks': []}
+
+        station_dictionary[station.uuid]['locks'].append ({'lock_id': lock.lockID,
+                                                           'lock_description': lock.description,
+                                                           })
 
     return JsonResponse (payload)
 

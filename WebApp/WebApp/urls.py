@@ -23,7 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('api/stations/', views.StationView),
-    path('api/lock/', views.LockStationView),
     path('api/create-user/', views.CreateUserView),
     path('api/status/', views.StatusView),
 
