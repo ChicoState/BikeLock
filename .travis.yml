@@ -17,7 +17,6 @@ matrix:
       branches: 
         only:
             - mobileDev
-            - master 
       addons:
           apt:
               packages:
