@@ -14,6 +14,10 @@ matrix:
        
     - language: dart
       dist: xenial
+      branches: 
+        only:
+            - mobileDev
+            - master 
       addons:
           apt:
               packages:
