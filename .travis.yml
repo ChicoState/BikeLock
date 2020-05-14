@@ -14,9 +14,6 @@ matrix:
        
     - language: dart
       dist: xenial
-      branches: 
-        only:
-        - mobileDev
       addons:
           apt:
               packages:
@@ -25,8 +22,6 @@ matrix:
         - git clone https://github.com/flutter/flutter.git -b stable
         - ./flutter/bin/flutter doctor
         - gem install coveralls-lcov
-      before_script: 
-        - cd /Mobile/lib
       script:
         - ./flutter/bin/flutter test --coverage
       after_success:
