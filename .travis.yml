@@ -16,19 +16,21 @@ matrix:
       dist: xenial
       branches: 
         only:
-            - mobileDev
+        - mobileDev
       addons:
           apt:
               packages:
                   - lib32stdc++6
       install:
-          - git clone https://github.com/flutter/flutter.git -b stable
-          - ./flutter/bin/flutter doctor
-          - gem install coveralls-lcov
+        - git clone https://github.com/flutter/flutter.git -b stable
+        - ./flutter/bin/flutter doctor
+        - gem install coveralls-lcov
+      before_script: 
+        - cd /Mobile/lib
       script:
-      - ./flutter/bin/flutter test --coverage
+        - ./flutter/bin/flutter test --coverage
       after_success:
-      - coveralls-lcov coverage/lcov.info
+        - coveralls-lcov coverage/lcov.info
       cache:
           directories:
-          - $HOME/.pub-cache
+              - $HOME/.pub-cache
