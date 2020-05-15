@@ -77,11 +77,11 @@ class LockDetailScreen extends StatelessWidget {
                 Text(lock.belongsToRack,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                 SizedBox(height: 50),
-//              Text(lock.available.toString(), style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
+                Text(lock.available.toString(),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),),
                 SizedBox(height: 50),
               ]
           )
-
       ),
 
       floatingActionButton: Container(
@@ -90,16 +90,14 @@ class LockDetailScreen extends StatelessWidget {
         child: FittedBox(
           child: FloatingActionButton(
             //TODO Make button only work when pressed, and not on loading of screen
-            onPressed: lock_and_unlock(lock),
             tooltip: 'Lock/Unlock',
+            onPressed: () => lock_and_unlock(lock),
             //Alternating Icon
-            child: (lock.available.toString() == "true")
+            child: (lock.available)
                 ? Icon(Icons.lock)
                 : Icon(Icons.lock_open),
             //Alternating Icon Color
-            backgroundColor: (lock.available.toString() == "true") ? Colors
-                .green : Colors.red,
-            splashColor: Colors.amber,
+            backgroundColor: (lock.available) ? Colors.green : Colors.red,
           ),
         ),
       ),
@@ -119,3 +117,4 @@ class LockDetailScreen extends StatelessWidget {
     }
   }
 }
+
