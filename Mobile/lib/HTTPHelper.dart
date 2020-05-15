@@ -5,20 +5,20 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 //This is the API String I found on the github to interface with the server
-final String STATION_API_CALL = "/api/lock/";
+const String STATION_API_CALL = "/api/lock/";
 
 //This is used as the URL Essentially ex: http://0.0.0.0:8000
-final String DOMAIN = "rackServer:8000";
+const String DOMAIN = "rackServer:8000";
 
-final String METHOD = "http://";
+const String METHOD = "http://";
 
-final String ACCOUNT_CREATION_URL = "/api/create-user/";
+const String ACCOUNT_CREATION_URL = "/api/create-user/";
 
-final String WEBSERVER = "0.0.0.0:8000";
+const String WEBSERVER = "0.0.0.0:8000";
 
-final String SIGNIN_URL = "/rest-auth/login/";
+const String SIGNIN_URL = "/rest-auth/login/";
 
-final String SIGNOUT_URL = "/rest-auth/logout/";
+const String SIGNOUT_URL = "/rest-auth/logout/";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {

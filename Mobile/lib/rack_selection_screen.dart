@@ -48,6 +48,7 @@ class rack_selection_screen extends StatelessWidget {
         itemCount: _AvailableRacks.length,
         itemBuilder: (context, index) {
           return ListTile(
+            title: Text(_AvailableRacks[index].rackName),
             onTap: () {
               Navigator.push(
                   context,
@@ -55,7 +56,8 @@ class rack_selection_screen extends StatelessWidget {
                     builder: (context) => lock_selection_screen(
                       rack: _AvailableRacks[index],
                     ),
-                  ));
+                  )
+              );
             },
           );
         },
