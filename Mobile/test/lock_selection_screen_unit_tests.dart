@@ -1,9 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:superbikelock/lock_selection_screen.dart';
-import 'package:superbikelock/login_page.dart';
-import 'package:superbikelock/auth.dart';
-import 'package:superbikelock/HTTPHelper.dart';
-
+import 'package:superbikelock/lock_confirm_screen.dart';
+import 'package:superbikelock/model/lock_model.dart';
 
 void main() {
   test('title', () {
@@ -18,7 +15,7 @@ void main() {
     Lock lock = Lock(
         "Lock 1", "Lock 1 Description", "Belongs to rack 1", false);
 
-    LockDetailScreen detail_screen = LockDetailScreen();
+    lock_confirm_screen_state detail_screen = lock_confirm_screen_state();
 
     detail_screen.lock_and_unlock(lock);
 
@@ -28,7 +25,7 @@ void main() {
   test('call lock_and_unlock on unlocked lock, expect lock.available to be false', () {
     Lock lock = Lock("Lock 1", "Lock 1 Description", "Belongs to rack 1", true);
 
-    LockDetailScreen detail_screen = LockDetailScreen();
+    lock_confirm_screen_state detail_screen = lock_confirm_screen_state();
 
     detail_screen.lock_and_unlock(lock);
 

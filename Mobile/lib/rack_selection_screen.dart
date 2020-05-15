@@ -1,16 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:superbikelock/lock_selection_screen.dart';
+import 'package:superbikelock/model/lock_model.dart';
+import 'package:superbikelock/model/rack_model.dart';
 
-// Create own file for Rack class
-class Rack {
-  final String rackName;
-  final String rackDescription;
-  final int totalLocks;
-  final List<Lock> listOfLocks;
-
-  Rack(this.rackName, this.rackDescription, this.totalLocks, this.listOfLocks);
-}
 
 class rack_selection_screen extends StatelessWidget {
 //  final List<Rack> racks;
@@ -19,16 +12,16 @@ class rack_selection_screen extends StatelessWidget {
 
 //  Sample Locks
 //  List<Lock> sampleLockList;
-  static Lock lock1 =
-      Lock("Lock 1", "Lock 1 Description", "Belongs to rack 1", false);
-  static Lock lock2 =
-      Lock("Lock 2", "Lock 2 Description", "Belongs to rack 1", true);
+  static Lock lock1 = Lock(
+      "Lock 1", "Lock 1 Description", "Belongs to rack 1", false);
+  static Lock lock2 = Lock(
+      "Lock 2", "Lock 2 Description", "Belongs to rack 1", true);
   static List<Lock> sampleLockList = [lock1, lock2];
 
-  static Lock lock3 =
-      Lock("Lock 3", "Lock3 Description", "Belongs to rack 2", true);
-  static Lock lock4 =
-      Lock("Lock 4", "Lock4 Description", "Belongs to rack 2", false);
+  static Lock lock3 = Lock(
+      "Lock 3", "Lock3 Description", "Belongs to rack 2", true);
+  static Lock lock4 = Lock(
+      "Lock 4", "Lock4 Description", "Belongs to rack 2", false);
   static List<Lock> sampleLockList2 = [lock3, lock4];
 
   List<Rack> _AvailableRacks = [
