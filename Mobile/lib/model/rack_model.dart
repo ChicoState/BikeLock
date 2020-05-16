@@ -1,10 +1,15 @@
 import 'lock_model.dart';
 
 class Rack {
-  final String rackName;
-  final String rackDescription;
-  final int totalLocks;
+  final String UUID;
+  final String name;
+  final String description;
+  final int locks;
   final List<Lock> listOfLocks;
 
-  Rack(this.rackName, this.rackDescription, this.totalLocks, this.listOfLocks);
+  Rack(this.UUID, this.name, this.description, this.locks, this.listOfLocks,);
+
+  fromJSONtoRack() {
+
+  }
 }

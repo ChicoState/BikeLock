@@ -1,8 +1,13 @@
 class Lock {
-  final String lockName;
-  final String lockDescription;
-  final String belongsToRack;
+  final int lockID;
+  final String name;
+  final String description;
+  final String rackUUID;
   bool available;
 
-  Lock(this.lockName, this.lockDescription, this.belongsToRack, this.available);
+  Lock(this.lockID, this.name, this.description, this.rackUUID, this.available);
+
+  fromJSONtoLock() {
+
+  }
 }

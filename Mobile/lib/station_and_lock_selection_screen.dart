@@ -54,7 +54,6 @@ class _station_and_lock_selection_screenState
   }
 
   set_lock_state(bool state) async {
-    //TODO error checking for failed attempts
     var HTTP =
         HTTPHelper('/api/lock/', get_cur_uuid(), get_cur_lock(), state ? 1 : 0);
     final response = await HTTP.post();

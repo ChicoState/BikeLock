@@ -3,6 +3,9 @@ import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:superbikelock/model/rack_model.dart';
+
+import 'model/lock_model.dart';
 
 //This is the API String I found on the github to interface with the server
 const String STATION_API_CALL = "/api/lock/";
@@ -19,6 +22,8 @@ const String WEBSERVER = "0.0.0.0:8000";
 const String SIGNIN_URL = "/rest-auth/login/";
 
 const String SIGNOUT_URL = "/rest-auth/logout/";
+
+const String GET_STATIONS = "/api/stations/";
 
 //This class is meant to make all the HTTP requests cleaner
 class HTTPHelper {
@@ -115,6 +120,9 @@ class HTTPHelper {
     developer.log(url);
     developer.log(frame);
 
+
+//        return "StringBeans";
+
     ///    Post request to actually create account
     http.Response response = await http.post(
         url, body: frame);
@@ -123,7 +131,7 @@ class HTTPHelper {
     developer.log('HTTP GET RESPONSE: ' + response.body.toString());
 
     //TODO uncomment to make useful
-//    return "StringBeans";
+
     if(response.statusCode == 200){
       return email;
     }
@@ -158,5 +166,48 @@ class HTTPHelper {
     else{
       return false;
     }
+  }
+
+  Future<List> getActiveStations() async {
+    //Creating Request to be sent.
+    String url = METHOD + WEBSERVER + GET_STATIONS;
+
+    developer.log(url);
+
+
+    Lock lock1 = Lock(0, "Lock 1", "Lock 1 Description",
+        "b80e7c2a-91d1-4718-a1f3-2e2c7d260646", false);
+    Lock lock2 = Lock(1, "Lock 2", "Lock 2 Description",
+        "b80e7c2a-91d1-4718-a1f3-2e2c7d260646", true);
+    Lock lock3 = Lock(2, "Lock 3", "Lock3 Description",
+        "095a6367-0fc7-4a91-995f-a7268c6e76cf", true);
+    Lock lock4 = Lock(3, "Lock 4", "Lock4 Description",
+        "095a6367-0fc7-4a91-995f-a7268c6e76cf", false);
+    List<Lock> sampleLockList = [lock1, lock2];
+    List<Lock> sampleLockList2 = [lock3, lock4];
+
+    List<Rack> _AvailableRacks = [
+      Rack("uuid1 ", "Online Rack", "This is Rack 1", sampleLockList.length,
+          sampleLockList),
+      Rack("095a6367-0fc7-4a91-995f-a7268c6e76cf", "Rack 2", "This is Rack 2",
+          sampleLockList2.length, sampleLockList2),
+
+    ];
+
+    /// Comment this out to get it to actually make request for servers
+    return _AvailableRacks;
+
+
+//    http.Response response = await http.get(url);
+//
+//    developer.log('HTTP GET STATUS CODE: ' + response.statusCode.toString());
+//    developer.log('HTTP GET RESPONSE: ' + response.body.toString());
+//
+//    if(response.statusCode == 200){
+//      return response;
+//    }
+//    else{
+//      return null;
+//    }
   }
 }

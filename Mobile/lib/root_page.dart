@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'auth.dart';
 import 'login_page.dart';
-import 'rack_selection_screen.dart';
+import 'view/rack_selection_screen.dart';
 
 
 class RootPage extends StatefulWidget {
