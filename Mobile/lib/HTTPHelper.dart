@@ -87,6 +87,7 @@ class HTTPHelper {
     //Creating data to be sent.
     var frame = json.encode({
       'password': password,
+      'username': email,
       'email': email,
     });
     String url = METHOD + WEBSERVER + ACCOUNT_CREATION_URL;
@@ -114,6 +115,7 @@ class HTTPHelper {
     //Creating data to be sent.
     var frame = json.encode({
       'password': password,
+      'username': email,
       'email': email,
     });
     String url = METHOD + WEBSERVER + SIGNIN_URL;
@@ -187,7 +189,7 @@ class HTTPHelper {
     List<Lock> sampleLockList2 = [lock3, lock4];
 
     List<Rack> _AvailableRacks = [
-      Rack("uuid1 ", "Online Rack", "This is Rack 1", sampleLockList.length,
+      Rack("uuid1 ", "Rack 1", "This is Rack 1", sampleLockList.length,
           sampleLockList),
       Rack("095a6367-0fc7-4a91-995f-a7268c6e76cf", "Rack 2", "This is Rack 2",
           sampleLockList2.length, sampleLockList2),
