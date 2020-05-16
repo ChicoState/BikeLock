@@ -73,7 +73,7 @@ class HTTPHelper {
       'lock_id': this.lock_ID.toString(),
       'state': this.state.toString(),
     };
-    final uri = Uri.http(DOMAIN, this.api_method, frame);
+    final uri = Uri.http(WEBSERVER, this.api_method, frame);
     developer.log("HTTP GET REQUEST: " + uri.toString());
 
     final headers = {HttpHeaders.contentTypeHeader: 'application/json'};

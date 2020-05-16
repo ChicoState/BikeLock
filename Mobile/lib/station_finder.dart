@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:superbikelock/lock_info.dart';
+
 import 'HTTPHelper.dart';
-import 'dart:developer' as developer;
 
 class StationFinder extends StatefulWidget {
   StationFinder({Key key, this.title}) : super(key: key);
@@ -59,7 +61,8 @@ class _StationFinderState extends State<StationFinder> {
               return Container(
                 height: 50,
                 color: stations[index]['available']? Colors.green : Colors.red,
-                child: ListTile(
+                child:
+                ListTile(
                   title: Text(
                       '${stations[index]['name']}',
                       style: TextStyle(

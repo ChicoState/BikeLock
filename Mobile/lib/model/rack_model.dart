@@ -9,7 +9,8 @@ class Rack {
 
   Rack(this.UUID, this.name, this.description, this.locks, this.listOfLocks,);
 
-  fromJSONtoRack() {
-
+  fromJSONtoRack(List<dynamic> JSON) {
+//    for(int i = 0; i <= JSON.length; )
+//    this.UUID = response
   }
 }
