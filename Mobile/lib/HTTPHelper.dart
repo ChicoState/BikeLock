@@ -17,7 +17,7 @@ const String METHOD = "http://";
 
 const String ACCOUNT_CREATION_URL = "/api/create-user/";
 
-const String WEBSERVER = "0.0.0.0:8000";
+const String WEBSERVER = "10.8.0.5:8000";
 
 const String SIGNIN_URL = "/rest-auth/login/";
 
@@ -58,11 +58,11 @@ class HTTPHelper {
       'state': this.state,
     });
     developer.log("HTTP POST FRAME: " + frame);
-
+//    var URL =
     final http.Response response = await http.post(
-        METHOD + DOMAIN + this.api_method, body: frame);
+        METHOD + WEBSERVER + this.api_method, body: frame);
     developer.log('HTTP POST STATUS CODE: ' + response.statusCode.toString());
-    developer.log('HTTP POST RESPONSE: ' + response.body.toString());
+//    developer.log('HTTP POST RESPONSE: ' + response.body.toString());
     return response;
   }
 

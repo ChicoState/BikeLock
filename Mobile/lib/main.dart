@@ -1,11 +1,7 @@
-import 'dart:convert';
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 import 'package:superbikelock/auth.dart';
 import 'package:superbikelock/root_page.dart';
-import 'HTTPHelper.dart';
-import 'login_page.dart';
+
 
 void main() => runApp(MyApp());
 
